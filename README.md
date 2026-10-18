@@ -23,7 +23,7 @@
 
 <br/>
 
-![Tokyo Highway Road Preview](assets/tokyo_road.png)
+![Drift86 - AE86 Tokyo Highway](assets/tokyo_road_ae86.gif)
 
 <br/>
 
