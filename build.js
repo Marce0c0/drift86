@@ -133,12 +133,9 @@ const jsContent = `// ==UserScript==
                 filter: drop-shadow(0 0 3px rgba(255, 240, 160, 0.45));
                 transition: opacity 0.2s ease;
             }
-            #\${CAR_ID}.paused:not(.drifting) .ae86-headlight-glow {
-                animation: ae86-headlight-blink 0.5s step-end infinite;
-            }
-            @keyframes ae86-headlight-blink {
-                0%, 100% { opacity: 0.6; right: -14px; filter: drop-shadow(0 0 5px rgba(255, 240, 160, 0.7)); }
-                50%       { opacity: 0.05; right: -10px; filter: none; }
+            #\${CAR_ID}.paused .ae86-headlight-glow {
+                opacity: 0.15;
+                right: -10px;
             }
             #\${CAR_ID}.drifting .ae86-headlight-glow {
                 opacity: 0.35;
@@ -174,8 +171,8 @@ const jsContent = `// ==UserScript==
             }
             .ae86-hazard-rear {
                 width: 3px; height: 3px;
-                bottom: 8px; left: 2px;
-                background: #ff7700;
+                bottom: 11px; left: 2px;
+                background: #ff5500;
             }
 
             /* Humo dinámico denso y abundante estilo Initial D durante derrape */
