@@ -1,0 +1,26 @@
+{
+  "name": "drift86",
+  "version": "1.0.0",
+  "description": "Drift86: Initial D Trueno Seekbar for Spicetify / Spotify",
+  "main": "drift86.js",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "keywords": [
+    "spicetify",
+    "spicetify-extension",
+    "spotify",
+    "initial-d",
+    "ae86",
+    "drift86",
+    "trueno",
+    "drift",
+    "seekbar"
+  ],
+  "author": "Marce0c0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Marce0c0/drift86.git"
+  },
+  "license": "MIT"
+}
