@@ -23,7 +23,7 @@
 
 <br/>
 
-![Drift86 Preview](assets/ae86_blinking.gif)
+![Tokyo Highway Road Preview](assets/tokyo_road.png)
 
 <br/>
 
@@ -39,7 +39,7 @@
 ### ✨ Features
 
 - **3 Dynamic Pixel-Art Views:**
-  1. **Paused (3/4 Frontal Perspective):** Idling on the road with blinking warm pop-up headlights and amber hazard flashers.
+  1. **Paused (3/4 Frontal Perspective):** Idling on the road with authentic amber hazard flashers.
   2. **Playing (Lateral Cruising):** Driving smoothly along the road with bright pop-up headlights, subtle engine rumble, and trailing exhaust smoke.
   3. **Drifting (Initial D Countersteer):** When dragging the seekbar or jumping through tracks, the road dynamically arches into a mountain hairpin curve while the AE86 throws its tail out in a heavy countersteering drift with dense tire smoke clouds and suspension bounces.
 - **Tokyo Highway Road (Shutoko C1):** Dark textured asphalt with double white curb borders and diagonal hazard chevron markings, applied exclusively to the seekbar.

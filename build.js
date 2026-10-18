@@ -134,7 +134,7 @@ const jsContent = `// ==UserScript==
                 transition: opacity 0.2s ease;
             }
             #\${CAR_ID}.paused .ae86-headlight-glow {
-                opacity: 0.15;
+                opacity: 0.2;
                 right: -10px;
             }
             #\${CAR_ID}.drifting .ae86-headlight-glow {
@@ -171,8 +171,8 @@ const jsContent = `// ==UserScript==
             }
             .ae86-hazard-rear {
                 width: 3px; height: 3px;
-                bottom: 11px; left: 2px;
-                background: #ff5500;
+                bottom: 8px; left: 2px;
+                background: #ff7700;
             }
 
             /* Humo dinámico denso y abundante estilo Initial D durante derrape */
