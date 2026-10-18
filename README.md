@@ -23,7 +23,7 @@
 
 <br/>
 
-![Drift86 - AE86 Tokyo Highway](assets/tokyo_road_ae86.gif)
+![Drift86 - AE86 Tokyo Highway](assets/tokyo_road_ae86.gif?v=2)
 
 <br/>
 
