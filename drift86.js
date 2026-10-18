@@ -128,36 +128,50 @@
                 right: -12px;
             }
 
-            /* Intermitentes en pausa (píxeles planos sin sombras) */
+            /* Intermitentes en pausa (4 luces auténticas: 2 delanteras + 2 traseras, alumbrando en sincronía) */
             .ae86-hazard {
                 position: absolute;
-                background: #ffaa00;
-                box-shadow: none !important;
-                border-radius: 0px !important;
+                background: #ffb000;
+                border-radius: 1px;
                 pointer-events: none;
                 opacity: 0;
-                z-index: 5;
+                z-index: 6;
+                transition: none;
             }
             #${CAR_ID}.paused:not(.drifting) .ae86-hazard {
-                animation: ae86-hazard-blink 0.5s step-end infinite;
+                animation: ae86-hazard-blink 0.55s step-end infinite;
             }
             @keyframes ae86-hazard-blink {
-                0%, 100% { opacity: 1; }
-                50%       { opacity: 0; }
+                0%, 100% {
+                    opacity: 1;
+                    filter: drop-shadow(0 0 2px rgba(255, 180, 0, 1)) drop-shadow(0 0 5px rgba(255, 140, 0, 0.85));
+                }
+                50% {
+                    opacity: 0;
+                    filter: none;
+                }
             }
 
-            /* Luces delanteras intermitentes del morro 3/4 */
+            /* 1. Delantero derecho (esquina frontal derecha) */
             .ae86-hazard-front-right {
-                width: 3px; height: 2px;
-                bottom: 6px; right: 2px;
+                width: 3.5px; height: 2.5px;
+                bottom: 6.5px; right: 2px;
             }
+            /* 2. Delantero izquierdo (esquina frontal izquierda) */
             .ae86-hazard-front-left {
-                width: 3px; height: 2px;
-                bottom: 6px; left: 47px;
+                width: 3.5px; height: 2.5px;
+                bottom: 6.5px; left: 47px;
             }
-            .ae86-hazard-rear {
+            /* 3. Trasero izquierdo (esquina trasera izquierda) */
+            .ae86-hazard-rear-left {
                 width: 3px; height: 3px;
-                bottom: 8px; left: 2px;
+                bottom: 12px; left: 2.5px;
+                background: #ff7700;
+            }
+            /* 4. Trasero derecho (esquina trasera derecha) */
+            .ae86-hazard-rear-right {
+                width: 3px; height: 3px;
+                bottom: 10px; left: 14px;
                 background: #ff7700;
             }
 
@@ -356,7 +370,8 @@
             <div class="ae86-headlight-glow"></div>
             <div class="ae86-hazard ae86-hazard-front-right"></div>
             <div class="ae86-hazard ae86-hazard-front-left"></div>
-            <div class="ae86-hazard ae86-hazard-rear"></div>
+            <div class="ae86-hazard ae86-hazard-rear-left"></div>
+            <div class="ae86-hazard ae86-hazard-rear-right"></div>
         `;
         return wrapper;
     }
