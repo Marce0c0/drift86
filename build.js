@@ -67,13 +67,13 @@ const jsContent = `// ==UserScript==
 
             #\${CAR_ID} {
                 position: absolute;
-                width: 66px;
-                height: 26px;
+                width: 52px;
+                height: 18px;
                 pointer-events: none;
                 z-index: 100000 !important;
                 transform-origin: 50% 90%;
                 will-change: transform, left, top;
-                filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6));
+                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
                 transition: none;
                 opacity: 1 !important;
                 visibility: visible !important;
@@ -103,7 +103,11 @@ const jsContent = `// ==UserScript==
             /* Vista 2: Reproduciendo / Corriendo (de lateral horizontal corriendo con faros encendidos y vibración de motor) */
             #\${CAR_ID}.driving:not(.drifting) img.ae86-drive {
                 opacity: 1;
+                bottom: 2.8px;
                 animation: ae86-engine-rumble 0.22s infinite ease-in-out alternate;
+            }
+            #\${CAR_ID}.driving:not(.drifting) .ae86-headlight-glow {
+                bottom: 4.8px;
             }
             @keyframes ae86-engine-rumble {
                 0%   { transform: translateY(0px); }
@@ -118,10 +122,10 @@ const jsContent = `// ==UserScript==
             /* Haz de luz de faros escamoteables del AE86 (cálido, atmosférico, no exagerado) */
             .ae86-headlight-glow {
                 position: absolute;
-                bottom: 3px;
-                right: -16px;
-                width: 26px;
-                height: 14px;
+                bottom: 2px;
+                right: -13px;
+                width: 22px;
+                height: 11px;
                 background: radial-gradient(
                     ellipse at 0% 50%,
                     rgba(255, 252, 215, 0.42) 0%,
@@ -135,11 +139,11 @@ const jsContent = `// ==UserScript==
             }
             #\${CAR_ID}.paused .ae86-headlight-glow {
                 opacity: 0.2;
-                right: -10px;
+                right: -8px;
             }
             #\${CAR_ID}.drifting .ae86-headlight-glow {
                 opacity: 0.35;
-                right: -12px;
+                right: -10px;
             }
 
             /* Intermitentes en pausa (4 luces auténticas: 2 delanteras + 2 traseras, alumbrando en sincronía) */
@@ -166,27 +170,25 @@ const jsContent = `// ==UserScript==
                 }
             }
 
-            /* 1. Delantero derecho (esquina frontal derecha) */
+            /* 1. Delantero derecho */
             .ae86-hazard-front-right {
-                width: 3.5px; height: 2.5px;
-                bottom: 6.5px; right: 2px;
+                width: 2px; height: 1.5px;
+                bottom: 6px; right: 1px;
             }
-            /* 2. Delantero izquierdo (esquina frontal izquierda) */
+            /* 2. Delantero izquierdo */
             .ae86-hazard-front-left {
-                width: 3.5px; height: 2.5px;
-                bottom: 6.5px; left: 47px;
+                width: 2px; height: 1.5px;
+                bottom: 6px; left: 36.5px;
             }
-            /* 3. Trasero izquierdo (esquina trasera izquierda) */
+            /* 3. Lateral aleta izquierda */
+            .ae86-hazard-side-left {
+                width: 2px; height: 1.5px;
+                bottom: 7.5px; left: 33px;
+            }
+            /* 4. Trasero izquierdo */
             .ae86-hazard-rear-left {
-                width: 3px; height: 3px;
-                bottom: 12px; left: 2.5px;
-                background: #ff7700;
-            }
-            /* 4. Trasero derecho (esquina trasera derecha) */
-            .ae86-hazard-rear-right {
-                width: 3px; height: 3px;
-                bottom: 10px; left: 14px;
-                background: #ff7700;
+                width: 2px; height: 2px;
+                bottom: 9.5px; left: 1.5px;
             }
 
             /* Humo dinámico denso y abundante estilo Initial D durante derrape */
@@ -206,25 +208,32 @@ const jsContent = `// ==UserScript==
                 100% { opacity: 0;    transform: translate(-32px, -15px) scale(2.8); }
             }
 
-            /* Humo de escape sutil en crucero normal */
-            .ae86-exhaust-puff {
-                opacity: 0.9;
-                background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 225, 0.7) 45%, rgba(180, 180, 190, 0.25) 75%, rgba(150, 150, 150, 0) 100%) !important;
-                filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25)) !important;
-                animation: ae86-exhaust-fade 0.5s ease-out forwards !important;
+            /* Humo de escape sutil y continuo en crucero */
+            .ae86-cruising-smoke {
+                position: absolute;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(230, 232, 238, 0.55) 0%, rgba(190, 195, 205, 0.3) 45%, rgba(160, 165, 175, 0.08) 75%, transparent 100%);
+                pointer-events: none;
+                z-index: 99998 !important;
+                animation: ae86-cruising-fade 0.55s ease-out forwards;
+                will-change: transform, opacity;
             }
-            @keyframes ae86-exhaust-fade {
-                0%   { opacity: 0.9; transform: translate(0, 0) scale(0.65); }
-                40%  { opacity: 0.75; }
-                100% { opacity: 0;   transform: translate(-22px, -6px) scale(1.9); }
+            @keyframes ae86-cruising-fade {
+                0%   { opacity: 0.55; transform: translate(0, 0) scale(0.5); }
+                50%  { opacity: 0.3; }
+                100% { opacity: 0;    transform: translate(-15px, -3px) scale(1.6); }
             }
+
 
             /* ─── Calzada de Tokio SOLO en la barra de reproducción (Seekbar) ─── */
             .playback-progressbar,
             [data-testid="playback-progressbar"],
             .playback-bar {
-                padding-top: 6px !important;
-                padding-bottom: 6px !important;
+                display: flex !important;
+                align-items: center !important;
+                position: relative !important;
+                z-index: 10 !important;
+                overflow: visible !important;
             }
 
             .playback-progressbar .progress-bar,
@@ -233,11 +242,15 @@ const jsContent = `// ==UserScript==
             .playback-progressbar [data-testid="progress-bar"],
             [data-testid="playback-progressbar"] [data-testid="progress-bar"],
             .playback-bar [data-testid="progress-bar"] {
-                height: 16px !important;
+                height: 18px !important;
                 background: transparent !important;
                 border: none !important;
                 box-shadow: none !important;
                 overflow: visible !important;
+                display: flex !important;
+                align-items: center !important;
+                align-self: center !important;
+                margin: 0 !important;
             }
 
             /* Calzada de asfalto japonés de Tokio con arcenes de franjas diagonales blancas (Shutoko / C1) */
@@ -247,7 +260,12 @@ const jsContent = `// ==UserScript==
             .playback-progressbar [data-testid="progress-bar"] > div:first-child,
             [data-testid="playback-progressbar"] [data-testid="progress-bar"] > div:first-child,
             .playback-bar [data-testid="progress-bar"] > div:first-child {
-                background-color: #202228 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                transform: none !important;
+                box-sizing: border-box !important;
+                background-color: #1e2025 !important;
                 background-image: 
                     repeating-linear-gradient(
                         -50deg,
@@ -266,20 +284,20 @@ const jsContent = `// ==UserScript==
                         transparent 8px
                     ) !important;
                 background-size: 
-                    100% 3.5px,
-                    100% 1.5px,
-                    100% 1.5px,
-                    100% 3.5px !important;
+                    100% 3px,
+                    100% 1px,
+                    100% 1px,
+                    100% 3px !important;
                 background-position: 
                     left top 0px,
-                    left top 3.5px,
-                    left bottom 3.5px,
+                    left top 3px,
+                    left bottom 3px,
                     left bottom 0px !important;
                 background-repeat: repeat-x !important;
-                height: 16px !important;
-                border-radius: 2px !important;
-                border-top: 1.5px solid #ffffff !important;
-                border-bottom: 1.5px solid #ffffff !important;
+                height: 18px !important;
+                border-radius: 3px !important;
+                border-top: 1.2px solid #ffffff !important;
+                border-bottom: 1.2px solid #ffffff !important;
                 box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9), 0 2px 6px rgba(0, 0, 0, 0.7) !important;
                 overflow: hidden !important;
                 transition: none !important;
@@ -293,8 +311,8 @@ const jsContent = `// ==UserScript==
             .playback-bar:active .x-progressBar-background,
             .playback-progressbar [class*="is-dragging"] .x-progressBar-background,
             [data-testid="playback-progressbar"] [class*="is-dragging"] .x-progressBar-background {
-                height: 16px !important;
-                background-color: #202228 !important;
+                height: 18px !important;
+                background-color: #1e2025 !important;
             }
 
             /* Progreso iluminado SOLO en la barra de reproducción */
@@ -334,6 +352,89 @@ const jsContent = `// ==UserScript==
             .player-controls__buttons {
                 will-change: transform;
                 z-index: 1 !important;
+            }
+
+            /* ─── Tooltip flotante de tiempo / segundos (Tacómetro JDM Blanco y Negro 100% Opaco) ─── */
+            div[data-tippy-root] {
+                z-index: 999999 !important;
+            }
+
+            .playback-progressbar [role="tooltip"],
+            [data-testid="playback-progressbar"] [role="tooltip"],
+            .playback-bar [role="tooltip"],
+            .player-controls [role="tooltip"],
+            .Root__now-playing-bar [role="tooltip"],
+            .main-nowPlayingBar-container [role="tooltip"],
+            [data-floating-ui-portal] [role="tooltip"],
+            [data-tippy-root] .tippy-box,
+            .tippy-box,
+            [data-testid="playback-progressbar"] div[class*="tooltip"],
+            .playback-progressbar div[class*="tooltip"],
+            .playback-bar div[class*="tooltip"],
+            [data-testid="playback-progressbar"] [data-encore-id="tooltip"],
+            .playback-progressbar [data-encore-id="tooltip"] {
+                background-color: #0b0c0e !important;
+                background: #0b0c0e !important;
+                opacity: 1 !important;
+                color: #ffffff !important;
+                border: 1.5px solid #ffffff !important;
+                border-radius: 3px !important;
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.98), 0 0 0 1px #000000 !important;
+                font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", "MS Gothic", "Consolas", monospace, sans-serif !important;
+                font-weight: 800 !important;
+                font-size: 11px !important;
+                letter-spacing: 1.2px !important;
+                font-feature-settings: "tnum" on, "lnum" on !important;
+                padding: 2px 7px !important;
+                z-index: 999999 !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
+
+            /* Contenido y texto interno del tooltip */
+            [data-tippy-root] .tippy-content,
+            .tippy-box .tippy-content,
+            .playback-progressbar [role="tooltip"] *,
+            [data-testid="playback-progressbar"] [role="tooltip"] *,
+            .playback-bar [role="tooltip"] *,
+            [data-tippy-root] * {
+                background: transparent !important;
+                color: #ffffff !important;
+                font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", "MS Gothic", "Consolas", monospace, sans-serif !important;
+                font-weight: 800 !important;
+                font-size: 11px !important;
+                letter-spacing: 1.2px !important;
+                font-feature-settings: "tnum" on, "lnum" on !important;
+                opacity: 1 !important;
+            }
+
+            /* Flecha opaca */
+            [data-tippy-root] .tippy-arrow,
+            .tippy-box .tippy-arrow {
+                color: #0b0c0e !important;
+            }
+            [data-tippy-root] .tippy-arrow::before,
+            .tippy-box .tippy-arrow::before {
+                border-top-color: #0b0c0e !important;
+                border-bottom-color: #0b0c0e !important;
+            }
+
+            /* Indicadores laterales de tiempo transcurrido y total (0:00 / 3:45) estilo tacómetro digital japonés */
+            .playback-progressbar .playback-bar__progress-time,
+            .playback-bar .playback-bar__progress-time,
+            .playback-progressbar .encore-text-marginal,
+            .playback-bar .encore-text-marginal,
+            [data-testid="playback-progressbar"] [class*="playback-position"],
+            [data-testid="playback-progressbar"] [class*="playback-duration"],
+            [data-testid="playback-position"],
+            [data-testid="playback-duration"] {
+                font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", "MS Gothic", "Consolas", monospace, sans-serif !important;
+                font-weight: 700 !important;
+                font-size: 11px !important;
+                letter-spacing: 0.8px !important;
+                font-feature-settings: "tnum" on, "lnum" on !important;
+                color: #ffffff !important;
+                opacity: 0.9 !important;
             }
 
             /* ─── Proteccion estricta del slider de volumen de Spotify ─── */
@@ -384,8 +485,8 @@ const jsContent = `// ==UserScript==
             <div class="ae86-headlight-glow"></div>
             <div class="ae86-hazard ae86-hazard-front-right"></div>
             <div class="ae86-hazard ae86-hazard-front-left"></div>
+            <div class="ae86-hazard ae86-hazard-side-left"></div>
             <div class="ae86-hazard ae86-hazard-rear-left"></div>
-            <div class="ae86-hazard ae86-hazard-rear-right"></div>
         \`;
         return wrapper;
     }
@@ -436,13 +537,13 @@ const jsContent = `// ==UserScript==
             road.appendChild(svgCurve);
         }
         svgCurve.innerHTML = \`
-            <path id="ae86-curve-asphalt"       stroke="#202228" stroke-width="16" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-fill"          stroke="#1db954" stroke-width="16" stroke-linecap="butt" fill="none" opacity="0.45"/>
-            <path id="ae86-curve-stripes"       stroke="#ffffff" stroke-width="1.8" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-border-top"    stroke="#ffffff" stroke-width="1.5" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-inner-top"     stroke="#ffffff" stroke-width="1.5" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-inner-bottom"  stroke="#ffffff" stroke-width="1.5" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-border-bottom" stroke="#ffffff" stroke-width="1.5" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-asphalt"       stroke="#1e2025" stroke-width="18" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-fill"          stroke="#1db954" stroke-width="18" stroke-linecap="butt" fill="none" opacity="0.45"/>
+            <path id="ae86-curve-stripes"       stroke="#ffffff" stroke-width="1.6" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-border-top"    stroke="#ffffff" stroke-width="1.2" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-inner-top"     stroke="#ffffff" stroke-width="1.0" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-inner-bottom"  stroke="#ffffff" stroke-width="1.0" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-border-bottom" stroke="#ffffff" stroke-width="1.2" stroke-linecap="butt" fill="none"/>
         \`;
 
         const pathAsphalt = svgCurve.querySelector("#ae86-curve-asphalt");
@@ -471,7 +572,7 @@ const jsContent = `// ==UserScript==
         let lastKnownProgress = null;
         let driftEndTime = 0;
 
-        const CAR_WIDTH = 66;
+        const CAR_WIDTH = 52;
 
         let lastSmokeTime = 0;
         function emitSmoke(x, y, scale, parentElem) {
@@ -497,19 +598,20 @@ const jsContent = `// ==UserScript==
         let lastCruisingSmokeTime = 0;
         function emitCruisingSmoke(x, y, parentElem) {
             const now = performance.now();
-            if (now - lastCruisingSmokeTime < 90) return;
+            if (now - lastCruisingSmokeTime < 120) return;
             lastCruisingSmokeTime = now;
 
             const smoke = document.createElement("div");
-            smoke.className = "ae86-smoke-puff ae86-exhaust-puff";
-            const size = 8 + Math.random() * 5;
+            smoke.className = "ae86-cruising-smoke";
+            const size = 6 + Math.random() * 3;
             smoke.style.width = size + "px";
             smoke.style.height = size + "px";
             smoke.style.left = (x - size / 2) + "px";
             smoke.style.top = (y - size / 2) + "px";
             parentElem.appendChild(smoke);
-            setTimeout(() => smoke.remove(), 500);
+            setTimeout(() => smoke.remove(), 550);
         }
+
 
         let cachedRoad = null;
         let lastTargetCheck = 0;
@@ -662,10 +764,10 @@ const jsContent = `// ==UserScript==
                 const controlY = baseline - (archHeight * 2);
 
                 const pathCenterD = "M 0," + baseline.toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + controlY.toFixed(2) + " " + w.toFixed(2) + "," + baseline.toFixed(2);
-                const pathTopBorderD = "M 0," + (baseline - 7.25).toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + (controlY - 7.25).toFixed(2) + " " + w.toFixed(2) + "," + (baseline - 7.25).toFixed(2);
-                const pathTopInnerD = "M 0," + (baseline - 4.25).toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + (controlY - 4.25).toFixed(2) + " " + w.toFixed(2) + "," + (baseline - 4.25).toFixed(2);
-                const pathBottomInnerD = "M 0," + (baseline + 4.25).toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + (controlY + 4.25).toFixed(2) + " " + w.toFixed(2) + "," + (baseline + 4.25).toFixed(2);
-                const pathBorderBottomD = "M 0," + (baseline + 7.25).toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + (controlY + 7.25).toFixed(2) + " " + w.toFixed(2) + "," + (baseline + 7.25).toFixed(2);
+                const pathTopBorderD = "M 0," + (baseline - 8.2).toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + (controlY - 8.2).toFixed(2) + " " + w.toFixed(2) + "," + (baseline - 8.2).toFixed(2);
+                const pathTopInnerD = "M 0," + (baseline - 5.0).toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + (controlY - 5.0).toFixed(2) + " " + w.toFixed(2) + "," + (baseline - 5.0).toFixed(2);
+                const pathBottomInnerD = "M 0," + (baseline + 5.0).toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + (controlY + 5.0).toFixed(2) + " " + w.toFixed(2) + "," + (baseline + 5.0).toFixed(2);
+                const pathBorderBottomD = "M 0," + (baseline + 8.2).toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + (controlY + 8.2).toFixed(2) + " " + w.toFixed(2) + "," + (baseline + 8.2).toFixed(2);
 
                 if (pathAsphalt) pathAsphalt.setAttribute("d", pathCenterD);
                 if (pathFill) {
@@ -689,16 +791,16 @@ const jsContent = `// ==UserScript==
                     const nx = -curDy / len;
                     const ny = step / len;
 
-                    const xTop1 = x + nx * 7.2 - 2;
-                    const yTop1 = curY + ny * 7.2;
-                    const xTop2 = x + nx * 4.3 + 2;
-                    const yTop2 = curY + ny * 4.3;
+                    const xTop1 = x + nx * 8.2 - 2;
+                    const yTop1 = curY + ny * 8.2;
+                    const xTop2 = x + nx * 5.0 + 2;
+                    const yTop2 = curY + ny * 5.0;
                     stripesD += "M " + xTop1.toFixed(1) + "," + yTop1.toFixed(1) + " L " + xTop2.toFixed(1) + "," + yTop2.toFixed(1) + " ";
 
-                    const xBot1 = x - nx * 4.3 - 2;
-                    const yBot1 = curY - ny * 4.3;
-                    const xBot2 = x - nx * 7.2 + 2;
-                    const yBot2 = curY - ny * 7.2;
+                    const xBot1 = x - nx * 5.0 - 2;
+                    const yBot1 = curY - ny * 5.0;
+                    const xBot2 = x - nx * 8.2 + 2;
+                    const yBot2 = curY - ny * 8.2;
                     stripesD += "M " + xBot1.toFixed(1) + "," + yBot1.toFixed(1) + " L " + xBot2.toFixed(1) + "," + yBot2.toFixed(1) + " ";
                 }
                 if (pathStripes) pathStripes.setAttribute("d", stripesD);
@@ -723,14 +825,14 @@ const jsContent = `// ==UserScript==
                 : 0;
 
             car.style.left = (clampedCarX - halfW) + "px";
-            car.style.top = (carY - 24 + bounce) + "px";
+            car.style.top = (carY - 10 + bounce) + "px";
             car.style.transform = "rotate(" + (totalAngle + dynamicRoll).toFixed(2) + "deg)";
 
             if (isDriftingNow) {
-                const smokeScale = (1.1 + Math.min(Math.abs(velocity), 3) * 0.3) * Math.max(0.6, driftDecay);
-                emitSmoke(clampedCarX - halfW + 10, carY + 8, smokeScale, currentRoad);
+                const smokeScale = (1.0 + Math.min(Math.abs(velocity), 3) * 0.25) * Math.max(0.6, driftDecay);
+                emitSmoke(clampedCarX - halfW + 6, carY + 4, smokeScale, currentRoad);
             } else if (isPlaying) {
-                emitCruisingSmoke(clampedCarX - halfW + 2, carY + 6, currentRoad);
+                emitCruisingSmoke(clampedCarX - halfW + 1, carY + 3, currentRoad);
             }
 
             requestAnimationFrame(loop);
@@ -766,10 +868,27 @@ const jsContent = `// ==UserScript==
 
         function onGlobalPointerUp() {
             if (!isDragging) return;
+            const finalProgress = dragProgress;
             isDragging = false;
             dragProgress = null;
             velocity = 0;
             driftEndTime = performance.now() + 1500;
+
+            if (typeof finalProgress === "number" && !isNaN(finalProgress) && finalProgress >= 0 && finalProgress <= 1) {
+                lastKnownProgress = finalProgress;
+                try {
+                    if (typeof Spicetify.Player.seek === "function") {
+                        Spicetify.Player.seek(finalProgress);
+                    } else if (Spicetify.Platform?.PlayerAPI?.seekTo) {
+                        const dur = typeof Spicetify.Player.getDuration === "function" ? Spicetify.Player.getDuration() : 0;
+                        if (dur > 0) {
+                            Spicetify.Platform.PlayerAPI.seekTo(Math.round(finalProgress * dur));
+                        }
+                    }
+                } catch (err) {
+                    console.warn("[Drift86] Seek error:", err);
+                }
+            }
 
             window.removeEventListener("pointermove", onGlobalPointerMove, true);
             window.removeEventListener("pointerup", onGlobalPointerUp, true);
@@ -806,10 +925,13 @@ const jsContent = `// ==UserScript==
 fs.writeFileSync(path.join(__dirname, 'drift86.js'), jsContent, 'utf8');
 console.log('Build OK. File written to drift86.js, size:', fs.statSync(path.join(__dirname, 'drift86.js')).size);
 
-const extPath = path.join(process.env.APPDATA, 'spicetify', 'Extensions', 'drift86.js');
-try {
-    fs.copyFileSync(path.join(__dirname, 'drift86.js'), extPath);
-    console.log('Copied directly to Spicetify Extensions:', extPath);
-} catch (e) {
-    console.log('Could not copy to Spicetify Extensions:', e.message);
+const appData = process.env.APPDATA || (process.env.HOME ? path.join(process.env.HOME, '.config') : null);
+if (appData) {
+    const extPath = path.join(appData, 'spicetify', 'Extensions', 'drift86.js');
+    try {
+        fs.copyFileSync(path.join(__dirname, 'drift86.js'), extPath);
+        console.log('Copied directly to Spicetify Extensions:', extPath);
+    } catch (e) {
+        // Ignored if Spicetify directory is not present
+    }
 }
