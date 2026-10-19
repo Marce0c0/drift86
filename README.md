@@ -81,7 +81,7 @@ curl -fsSL "https://raw.githubusercontent.com/Marce0c0/drift86/main/drift86.js" 
 ---
 
 ### 🛍️ Spicetify Marketplace
-With the included `marketplace.json`, you can search for **"Drift86"** in Spicetify Marketplace inside Spotify and click **"Install"** with one single click.
+With the included `manifest.json`, you can search for **"Drift86"** in Spicetify Marketplace inside Spotify and click **"Install"** with one single click.
 
 ---
 
@@ -152,6 +152,9 @@ curl -fsSL "https://raw.githubusercontent.com/Marce0c0/drift86/main/drift86.js" 
    ./install.sh
    ```
 3. Pulsa **s** para reiniciar Spotify cuando termine el instalador.
+
+### 🛍️ Spicetify Marketplace
+Con el archivo `manifest.json` incluido, puedes buscar **"Drift86"** directamente en la tienda Spicetify Marketplace dentro de Spotify e instalarlo con un solo clic.
 
 ---
 

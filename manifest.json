@@ -3,7 +3,13 @@
   "description": "Toyota AE86 Trueno drifting seekbar with 3 dynamic views, realistic headlights, exhaust smoke, and Tokyo highway asphalt road.",
   "preview": "assets/ae86_lateral_drift.png",
   "main": "drift86.js",
-  "author": "Marce0c0",
+  "readme": "README.md",
+  "authors": [
+    {
+      "name": "Marce0c0",
+      "url": "https://github.com/Marce0c0"
+    }
+  ],
   "tags": [
     "seekbar",
     "initial-d",
