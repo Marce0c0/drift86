@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🏎️ Drift86: Initial D Trueno Seekbar
+# Drift86: Initial D Trueno Seekbar
 ### Custom Toyota AE86 Trueno Drifting Seekbar for Spicetify & Spotify
 
 [![GitHub Stars](https://img.shields.io/github/stars/Marce0c0/drift86?style=for-the-badge&logo=github&color=ffb703)](https://github.com/Marce0c0/drift86)
