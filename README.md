@@ -43,7 +43,6 @@
   2. **Playing (Lateral Cruising):** Driving smoothly along the road with bright pop-up headlights, subtle engine rumble, and trailing exhaust smoke.
   3. **Drifting (Initial D Countersteer):** When dragging the seekbar or jumping through tracks, the road dynamically arches into a mountain hairpin curve while the AE86 throws its tail out in a heavy countersteering drift with dense tire smoke clouds and suspension bounces.
 - **Tokyo Highway Road (Shutoko C1):** Dark textured asphalt with double white curb borders and diagonal hazard chevron markings, applied exclusively to the seekbar.
-- **JDM Tachometer HUD Tooltip & Timestamps:** Monochromatic Initial D-styled digital font with 100% solid, opaque background that never bleeds behind the play/pause button or controls.
 - **Volume Bar Protection:** The volume slider remains completely untouched with its clean original Spotify styling.
 - **100% Standalone & Lightweight:** Everything is packed into a single `drift86.js` file with embedded base64 sprites. Zero external network calls, zero bloat, and 0% CPU consumption when Spotify is minimized.
 
@@ -119,7 +118,6 @@ node build.js
   2. **Reproduciendo (Cruising lateral):** Vista lateral en carrera con faros iluminados, sutil vibración de motor y humo de escape suave.
   3. **Derrape (Initial D Drift):** Al arrastrar el cursor o hacer saltos de tiempo, la carretera se curva dinámicamente y el AE86 entra en derrape cruzado con contravolante, humo denso y mini-rebotes de suspensión.
 - **Calzada de Tokio (Shutoko C1):** Asfalto oscuro con bordillos dobles y franjas diagonales blancas (chevron) solo en la barra de reproducción.
-- **Tacómetro Digital JDM y Tooltip Opaco:** Tipografía técnica japonesa en blanco y negro, con fondo 100% sólido y opaco que no se transparenta al pasar por el botón de pausa o controles centrales.
 - **Protección del Slider de Volumen:** La barra de volumen permanece con su diseño limpio original de Spotify, sin alteraciones.
 - **100% Autónomo (Standalone):** Todo está empaquetado en un único archivo `drift86.js` con sprites base64 integrados. Sin dependencias externas ni consumo en segundo plano cuando la ventana está minimizada (0% CPU).
 

@@ -34,10 +34,13 @@ const jsContent = `// ==UserScript==
     const AE86_DRIFT = "data:image/png;base64,${driftBase64}";
 
     // ─── Estilos CSS ──────────────────────────────────────────────────────────
-    if (!document.getElementById(STYLE_ID)) {
-        const style = document.createElement("style");
+    let style = document.getElementById(STYLE_ID);
+    if (!style) {
+        style = document.createElement("style");
         style.id = STYLE_ID;
-        style.textContent = \`
+        document.head.appendChild(style);
+    }
+    style.textContent = \`
             .player-controls, .main-nowPlayingBar-center,
             .main-nowPlayingBar-container, .Root__now-playing-bar, footer {
                 overflow: visible !important;
@@ -354,89 +357,6 @@ const jsContent = `// ==UserScript==
                 z-index: 1 !important;
             }
 
-            /* ─── Tooltip flotante de tiempo / segundos (Tacómetro JDM Blanco y Negro 100% Opaco) ─── */
-            div[data-tippy-root] {
-                z-index: 999999 !important;
-            }
-
-            .playback-progressbar [role="tooltip"],
-            [data-testid="playback-progressbar"] [role="tooltip"],
-            .playback-bar [role="tooltip"],
-            .player-controls [role="tooltip"],
-            .Root__now-playing-bar [role="tooltip"],
-            .main-nowPlayingBar-container [role="tooltip"],
-            [data-floating-ui-portal] [role="tooltip"],
-            [data-tippy-root] .tippy-box,
-            .tippy-box,
-            [data-testid="playback-progressbar"] div[class*="tooltip"],
-            .playback-progressbar div[class*="tooltip"],
-            .playback-bar div[class*="tooltip"],
-            [data-testid="playback-progressbar"] [data-encore-id="tooltip"],
-            .playback-progressbar [data-encore-id="tooltip"] {
-                background-color: #0b0c0e !important;
-                background: #0b0c0e !important;
-                opacity: 1 !important;
-                color: #ffffff !important;
-                border: 1.5px solid #ffffff !important;
-                border-radius: 3px !important;
-                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.98), 0 0 0 1px #000000 !important;
-                font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", "MS Gothic", "Consolas", monospace, sans-serif !important;
-                font-weight: 800 !important;
-                font-size: 11px !important;
-                letter-spacing: 1.2px !important;
-                font-feature-settings: "tnum" on, "lnum" on !important;
-                padding: 2px 7px !important;
-                z-index: 999999 !important;
-                backdrop-filter: none !important;
-                -webkit-backdrop-filter: none !important;
-            }
-
-            /* Contenido y texto interno del tooltip */
-            [data-tippy-root] .tippy-content,
-            .tippy-box .tippy-content,
-            .playback-progressbar [role="tooltip"] *,
-            [data-testid="playback-progressbar"] [role="tooltip"] *,
-            .playback-bar [role="tooltip"] *,
-            [data-tippy-root] * {
-                background: transparent !important;
-                color: #ffffff !important;
-                font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", "MS Gothic", "Consolas", monospace, sans-serif !important;
-                font-weight: 800 !important;
-                font-size: 11px !important;
-                letter-spacing: 1.2px !important;
-                font-feature-settings: "tnum" on, "lnum" on !important;
-                opacity: 1 !important;
-            }
-
-            /* Flecha opaca */
-            [data-tippy-root] .tippy-arrow,
-            .tippy-box .tippy-arrow {
-                color: #0b0c0e !important;
-            }
-            [data-tippy-root] .tippy-arrow::before,
-            .tippy-box .tippy-arrow::before {
-                border-top-color: #0b0c0e !important;
-                border-bottom-color: #0b0c0e !important;
-            }
-
-            /* Indicadores laterales de tiempo transcurrido y total (0:00 / 3:45) estilo tacómetro digital japonés */
-            .playback-progressbar .playback-bar__progress-time,
-            .playback-bar .playback-bar__progress-time,
-            .playback-progressbar .encore-text-marginal,
-            .playback-bar .encore-text-marginal,
-            [data-testid="playback-progressbar"] [class*="playback-position"],
-            [data-testid="playback-progressbar"] [class*="playback-duration"],
-            [data-testid="playback-position"],
-            [data-testid="playback-duration"] {
-                font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", "MS Gothic", "Consolas", monospace, sans-serif !important;
-                font-weight: 700 !important;
-                font-size: 11px !important;
-                letter-spacing: 0.8px !important;
-                font-feature-settings: "tnum" on, "lnum" on !important;
-                color: #ffffff !important;
-                opacity: 0.9 !important;
-            }
-
             /* ─── Proteccion estricta del slider de volumen de Spotify ─── */
             .volume-bar,
             [data-testid="volume-bar"],
@@ -471,8 +391,6 @@ const jsContent = `// ==UserScript==
                 pointer-events: auto !important;
             }
         \`;
-        document.head.appendChild(style);
-    }
 
     function createCarElement() {
         const wrapper = document.createElement("div");
