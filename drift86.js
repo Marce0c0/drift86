@@ -235,6 +235,96 @@
                 z-index: 4;
             }
 
+            /* Conductor Takumi Fujiwara en el AE86 */
+            .ae86-driver-takumi {
+                position: absolute;
+                left: 21.8px;
+                bottom: 8.2px;
+                width: 9.5px;
+                height: 6.2px;
+                pointer-events: none;
+                z-index: 1;
+            }
+            .takumi-svg {
+                width: 100%;
+                height: 100%;
+                display: block;
+                shape-rendering: crispEdges;
+            }
+            #${CAR_ID}.paused .ae86-driver-takumi {
+                display: none;
+            }
+            #${CAR_ID}.drifting .ae86-driver-takumi {
+                transform: rotate(-3deg) translateY(-0.2px);
+            }
+
+            /* Conductor Bunta Fujiwara en el Impreza GC8 */
+            .impreza-driver-bunta {
+                position: absolute;
+                left: 23.2px;
+                bottom: 8.5px;
+                width: 10px;
+                height: 6.5px;
+                pointer-events: none;
+                z-index: 1;
+            }
+            .bunta-svg {
+                width: 100%;
+                height: 100%;
+                display: block;
+                shape-rendering: crispEdges;
+            }
+
+            /* Estela sutil de humo del cigarrillo de Bunta */
+            .bunta-smoke-container {
+                position: absolute;
+                right: -2px;
+                top: 2.8px;
+                width: 1px;
+                height: 1px;
+                pointer-events: none;
+            }
+            .bunta-smoke-puff {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 2.2px;
+                height: 2.2px;
+                background: rgba(235, 240, 250, 0.75);
+                border-radius: 50%;
+                filter: blur(0.5px);
+                pointer-events: none;
+                animation: bunta-smoke-wisp 1.35s infinite ease-out;
+            }
+            .bunta-smoke-puff.p1 {
+                animation-delay: 0s;
+            }
+            .bunta-smoke-puff.p2 {
+                animation-delay: 0.45s;
+            }
+            .bunta-smoke-puff.p3 {
+                animation-delay: 0.9s;
+            }
+
+            @keyframes bunta-smoke-wisp {
+                0% {
+                    transform: translate(0, 0) scale(0.7);
+                    opacity: 0.85;
+                }
+                35% {
+                    transform: translate(-3.5px, -1.8px) scale(1.3);
+                    opacity: 0.65;
+                }
+                70% {
+                    transform: translate(-8.5px, -3.8px) scale(2.0);
+                    opacity: 0.35;
+                }
+                100% {
+                    transform: translate(-14px, -5.5px) scale(2.8);
+                    opacity: 0;
+                }
+            }
+
             /* Intermitentes en pausa (4 luces auténticas: 2 delanteras + 2 traseras, alumbrando en sincronía) */
             .ae86-hazard {
                 position: absolute;
@@ -509,6 +599,21 @@
         wrapper.id = CAR_ID;
         wrapper.className = "driving";
         wrapper.innerHTML = `
+            <div class="ae86-driver-takumi">
+                <svg viewBox="0 0 16 11" class="takumi-svg">
+                    <rect x="2" y="7" width="9" height="4" fill="#f5f5fa" />
+                    <rect x="4" y="7" width="3" height="2" fill="#2d3038" />
+                    <rect x="8" y="7" width="5" height="2" fill="#f5f5fa" />
+                    <rect x="12" y="7" width="2" height="2" fill="#f0cbaf" />
+                    <rect x="5" y="4" width="6" height="4" fill="#f0cbaf" />
+                    <polygon points="11,5 12,6 11,7" fill="#f0cbaf" />
+                    <rect x="3" y="1" width="7" height="4" fill="#442c1c" />
+                    <rect x="4" y="0" width="5" height="2" fill="#583924" />
+                    <polygon points="9,2 12,3 11,5 9,4" fill="#442c1c" />
+                    <rect x="8" y="5" width="2" height="1" fill="#151515" />
+                    <rect x="8" y="4" width="3" height="1" fill="#382315" />
+                </svg>
+            </div>
             <img class="ae86-img ae86-idle" src="${AE86_IDLE}" alt="AE86 Pausa (3/4 frontal)" draggable="false" />
             <img class="ae86-img ae86-drive" src="${AE86_DRIVE}" alt="AE86 Corriendo (Lateral)" draggable="false" />
             <img class="ae86-img ae86-drift" src="${AE86_DRIFT}" alt="AE86 Derrape" draggable="false" />
@@ -526,6 +631,30 @@
         wrapper.id = IMPREZA_ID;
         wrapper.innerHTML = `
             <div class="impreza-body">
+                <div class="impreza-driver-bunta">
+                    <svg viewBox="0 0 18 12" class="bunta-svg">
+                        <rect x="2" y="7" width="10" height="5" fill="#282e3c" />
+                        <rect x="5" y="7" width="3" height="2" fill="#1a1e28" />
+                        <rect x="10" y="8" width="4" height="2" fill="#282e3c" />
+                        <rect x="13" y="8" width="2" height="2" fill="#eec5a8" />
+                        <rect x="5" y="4" width="7" height="4" fill="#eec5a8" />
+                        <polygon points="12,5 13,6 12,7" fill="#eec5a8" />
+                        <rect x="2" y="2" width="7" height="4" fill="#2a2a2e" />
+                        <polygon points="3,2 4,0 6,2" fill="#46464a" />
+                        <polygon points="6,2 8,0 9,2" fill="#323236" />
+                        <polygon points="9,2 11,1 12,3" fill="#2a2a2e" />
+                        <polygon points="10,3 12,4 11,5" fill="#2a2a2e" />
+                        <rect x="8" y="5" width="3" height="1" fill="#1c1c20" />
+                        <rect x="8" y="4" width="3" height="1" fill="#3a3a40" />
+                        <rect x="11" y="6" width="3" height="1" fill="#ffffff" />
+                        <rect x="14" y="6" width="1" height="1" fill="#ff4d00" />
+                    </svg>
+                    <div class="bunta-smoke-container">
+                        <div class="bunta-smoke-puff p1"></div>
+                        <div class="bunta-smoke-puff p2"></div>
+                        <div class="bunta-smoke-puff p3"></div>
+                    </div>
+                </div>
                 <img class="impreza-img" src="${BUNTA_IMPREZA}" alt="Subaru Impreza WRX STI Type R (Bunta)" draggable="false" />
             </div>
             <div class="impreza-headlight-lamp"></div>
