@@ -162,9 +162,17 @@ const jsContent = `// ==UserScript==
                 z-index: 99998 !important;
                 transform-origin: 50% 90%;
                 will-change: transform, left, top;
-                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7));
                 transition: none;
                 display: none;
+            }
+
+            #\${IMPREZA_ID} .impreza-body {
+                position: absolute;
+                top: 0; left: 0;
+                width: 100%;
+                height: 100%;
+                will-change: opacity, filter;
+                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7));
             }
 
             #\${IMPREZA_ID} img.impreza-img {
@@ -181,21 +189,68 @@ const jsContent = `// ==UserScript==
                 animation: ae86-engine-rumble 0.16s infinite ease-in-out alternate;
             }
 
+            /* Faros delanteros xenón/HID (Siempre encendidos durante la animación) */
+            #\${IMPREZA_ID} .impreza-headlight-lamp {
+                position: absolute;
+                right: 2px;
+                bottom: 6.8px;
+                width: 3.5px;
+                height: 2.6px;
+                background: #e8f5ff;
+                border-radius: 1px;
+                box-shadow: 0 0 3px #a0d8ff, 0 0 6px rgba(120, 205, 255, 0.95);
+                pointer-events: none;
+                z-index: 5;
+            }
+
             #\${IMPREZA_ID} .impreza-headlight-glow {
                 position: absolute;
-                bottom: 4.8px;
-                right: -14px;
-                width: 24px;
-                height: 11px;
+                bottom: 3.5px;
+                right: -16px;
+                width: 26px;
+                height: 12px;
                 background: radial-gradient(
                     ellipse at left center,
-                    rgba(170, 225, 255, 0.8) 0%,
-                    rgba(90, 180, 255, 0.35) 45%,
+                    rgba(180, 230, 255, 0.9) 0%,
+                    rgba(80, 175, 255, 0.4) 40%,
                     transparent 75%
                 );
                 border-radius: 50%;
                 pointer-events: none;
                 filter: blur(1px);
+                z-index: 4;
+            }
+
+            /* Luces traseras rojas estacionarias (Siempre encendidas durante la animación) */
+            #\${IMPREZA_ID} .impreza-taillight-lamp {
+                position: absolute;
+                left: 2px;
+                bottom: 7.8px;
+                width: 3.8px;
+                height: 2.2px;
+                background: #ff1818;
+                border-radius: 1px;
+                box-shadow: 0 0 3px #ff0000, 0 0 7px rgba(255, 20, 20, 0.95);
+                pointer-events: none;
+                z-index: 5;
+            }
+
+            #\${IMPREZA_ID} .impreza-taillight-glow {
+                position: absolute;
+                left: -12px;
+                bottom: 4.5px;
+                width: 18px;
+                height: 10px;
+                background: radial-gradient(
+                    ellipse at right center,
+                    rgba(255, 25, 25, 0.8) 0%,
+                    rgba(255, 0, 0, 0.3) 45%,
+                    transparent 75%
+                );
+                border-radius: 50%;
+                pointer-events: none;
+                filter: blur(1px);
+                z-index: 4;
             }
 
             /* Intermitentes en pausa (4 luces auténticas: 2 delanteras + 2 traseras, alumbrando en sincronía) */
@@ -488,8 +543,13 @@ const jsContent = `// ==UserScript==
         const wrapper = document.createElement("div");
         wrapper.id = IMPREZA_ID;
         wrapper.innerHTML = \`
-            <img class="impreza-img" src="\${BUNTA_IMPREZA}" alt="Subaru Impreza WRX STI Type R (Bunta)" draggable="false" />
+            <div class="impreza-body">
+                <img class="impreza-img" src="\${BUNTA_IMPREZA}" alt="Subaru Impreza WRX STI Type R (Bunta)" draggable="false" />
+            </div>
+            <div class="impreza-headlight-lamp"></div>
             <div class="impreza-headlight-glow"></div>
+            <div class="impreza-taillight-lamp"></div>
+            <div class="impreza-taillight-glow"></div>
         \`;
         return wrapper;
     }
@@ -846,10 +906,51 @@ const jsContent = `// ==UserScript==
                     surpriseStartTime = now;
                 }
 
+                // Control de opacidad y efecto fantasma (Fade-in inverso y Fade-out dejando solo luces traseras)
+                let bodyOpacity = 1.0;
+                let lightsFade = 1.0;
+
+                // 1. Entrada fantasmal: surge como una sombra espectral con faros penetrantes
+                if (buntaX < clampedCarX - 10) {
+                    const entranceDist = (clampedCarX - 10) - buntaX;
+                    // Desde lejos (opacity ~0.12) hasta sólido (opacity 1.0) al emparejarse
+                    bodyOpacity = Math.max(0.12, Math.min(1.0, 1.0 - (entranceDist / 200)));
+                }
+                // 2. Desaparición en la noche: al rebasar, la carrocería se desvanece
+                // dejando solo las luces traseras rojas brillando a la distancia
+                else if (buntaX > clampedCarX + 70) {
+                    const exitDist = buntaX - (clampedCarX + 70);
+                    const exitRange = Math.max(80, (w + 40) - (clampedCarX + 70));
+                    bodyOpacity = Math.max(0.0, 1.0 - (exitDist / (exitRange * 0.55)));
+                    if (buntaX > w + 20) {
+                        lightsFade = Math.max(0, 1.0 - (buntaX - (w + 20)) / 70);
+                    }
+                }
+
                 if (impreza) {
                     impreza.style.left = (buntaX - 27) + "px";
                     impreza.style.top = (carY - 10 + buntaYOffset) + "px";
                     impreza.style.display = "block";
+
+                    const bodyEl = impreza.querySelector(".impreza-body");
+                    if (bodyEl) {
+                        bodyEl.style.opacity = bodyOpacity.toFixed(2);
+                        bodyEl.style.filter = bodyOpacity < 0.85
+                            ? "drop-shadow(0 0 6px rgba(70, 160, 255, 0.5)) blur(" + ((1 - bodyOpacity) * 1.2).toFixed(1) + "px)"
+                            : "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7))";
+                    }
+
+                    // Luces traseras estacionarias y faros delanteros
+                    const taillightGlow = impreza.querySelector(".impreza-taillight-glow");
+                    const taillightLamp = impreza.querySelector(".impreza-taillight-lamp");
+                    if (taillightGlow) taillightGlow.style.opacity = (lightsFade * 0.95).toFixed(2);
+                    if (taillightLamp) taillightLamp.style.opacity = lightsFade.toFixed(2);
+
+                    const headlightGlow = impreza.querySelector(".impreza-headlight-glow");
+                    const headlightLamp = impreza.querySelector(".impreza-headlight-lamp");
+                    const frontHeadlightOpacity = (buntaX > clampedCarX + 120 ? Math.max(0, bodyOpacity * 1.2) : 1.0) * lightsFade;
+                    if (headlightGlow) headlightGlow.style.opacity = frontHeadlightOpacity.toFixed(2);
+                    if (headlightLamp) headlightLamp.style.opacity = frontHeadlightOpacity.toFixed(2);
                 }
 
                 // Humo de escape bóxer del Subaru
