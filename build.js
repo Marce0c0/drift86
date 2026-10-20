@@ -12,6 +12,10 @@ const idleBase64 = fs.readFileSync(idleImgPath).toString('base64');
 const driveBase64 = fs.readFileSync(driveImgPath).toString('base64');
 const driftBase64 = fs.readFileSync(driftImgPath).toString('base64');
 
+// Vista 4 (Easter Egg): Subaru Impreza WRX STI Type R GC8 de Bunta Fujiwara
+const imprezaImgPath = path.join(__dirname, 'assets', 'impreza_bunta_cruising.png');
+const imprezaBase64 = fs.readFileSync(imprezaImgPath).toString('base64');
+
 const jsContent = `// ==UserScript==
 // @name         Drift86: Initial D Trueno Seekbar
 // @description  Toyota AE86 Trueno drifting seekbar for Spicetify. Pausa (3/4 frontal quieto), Cruising (lateral corriendo), Derrape (Initial D con humo y contravolante). Calzada de Tokio.
@@ -27,11 +31,13 @@ const jsContent = `// ==UserScript==
 
     const STYLE_ID = "ae86-initial-d-styles";
     const CAR_ID = "ae86-initial-d-car";
+    const IMPREZA_ID = "ae86-bunta-impreza";
     const SVG_CURVE_ID = "ae86-initial-d-curve";
 
     const AE86_IDLE = "data:image/png;base64,${idleBase64}";
     const AE86_DRIVE = "data:image/png;base64,${driveBase64}";
     const AE86_DRIFT = "data:image/png;base64,${driftBase64}";
+    const BUNTA_IMPREZA = "data:image/png;base64,${imprezaBase64}";
 
     // ─── Estilos CSS ──────────────────────────────────────────────────────────
     let style = document.getElementById(STYLE_ID);
@@ -145,6 +151,51 @@ const jsContent = `// ==UserScript==
             #\${CAR_ID}.drifting .ae86-headlight-glow {
                 opacity: 0.35;
                 right: -10px;
+            }
+
+            /* Subaru Impreza WRX STI Type R (Bunta Fujiwara Easter Egg) */
+            #\${IMPREZA_ID} {
+                position: absolute;
+                width: 54px;
+                height: 18px;
+                pointer-events: none;
+                z-index: 99998 !important;
+                transform-origin: 50% 90%;
+                will-change: transform, left, top;
+                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7));
+                transition: none;
+                display: none;
+            }
+
+            #\${IMPREZA_ID} img.impreza-img {
+                position: absolute;
+                bottom: 2.8px; left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                object-position: 50% 100%;
+                image-rendering: pixelated;
+                display: block !important;
+                visibility: visible !important;
+                user-select: none;
+                animation: ae86-engine-rumble 0.16s infinite ease-in-out alternate;
+            }
+
+            #\${IMPREZA_ID} .impreza-headlight-glow {
+                position: absolute;
+                bottom: 4.8px;
+                right: -14px;
+                width: 24px;
+                height: 11px;
+                background: radial-gradient(
+                    ellipse at left center,
+                    rgba(170, 225, 255, 0.8) 0%,
+                    rgba(90, 180, 255, 0.35) 45%,
+                    transparent 75%
+                );
+                border-radius: 50%;
+                pointer-events: none;
+                filter: blur(1px);
             }
 
             /* Intermitentes en pausa (4 luces auténticas: 2 delanteras + 2 traseras, alumbrando en sincronía) */
@@ -433,6 +484,16 @@ const jsContent = `// ==UserScript==
         return wrapper;
     }
 
+    function createImprezaElement() {
+        const wrapper = document.createElement("div");
+        wrapper.id = IMPREZA_ID;
+        wrapper.innerHTML = \`
+            <img class="impreza-img" src="\${BUNTA_IMPREZA}" alt="Subaru Impreza WRX STI Type R (Bunta)" draggable="false" />
+            <div class="impreza-headlight-glow"></div>
+        \`;
+        return wrapper;
+    }
+
     function getPlaybackTarget() {
         return document.querySelector('.playback-bar [data-testid="progress-bar"]') ||
                document.querySelector('[data-testid="playback-progressbar"] [data-testid="progress-bar"]') ||
@@ -501,6 +562,12 @@ const jsContent = `// ==UserScript==
             road.appendChild(car);
         }
 
+        let impreza = document.getElementById(IMPREZA_ID);
+        if (!impreza) {
+            impreza = createImprezaElement();
+            road.appendChild(impreza);
+        }
+
         const playerButtons = document.querySelector(".player-controls__buttons");
 
         let isDragging = false;
@@ -512,6 +579,23 @@ const jsContent = `// ==UserScript==
         let archVelocity = 0;
         let lastKnownProgress = null;
         let driftEndTime = 0;
+
+        // Bunta Fujiwara Impreza Overtake state
+        let buntaActive = false;
+        let buntaX = -80;
+        let buntaYOffset = -6;
+        let nextBuntaTime = performance.now() + (35 + Math.random() * 45) * 1000;
+        let surpriseStartTime = 0;
+        let lastLoopTime = performance.now();
+
+        window.__triggerBuntaOvertake = function() {
+            if (buntaActive) return;
+            buntaActive = true;
+            buntaX = -80;
+            buntaYOffset = -6;
+            surpriseStartTime = 0;
+            if (impreza) impreza.style.display = "block";
+        };
 
         const CAR_WIDTH = 52;
 
@@ -579,6 +663,9 @@ const jsContent = `// ==UserScript==
 
             if (car.parentElement !== currentRoad) {
                 currentRoad.appendChild(car);
+            }
+            if (impreza && impreza.parentElement !== currentRoad) {
+                currentRoad.appendChild(impreza);
             }
             if (svgCurve.parentElement !== currentRoad) {
                 currentRoad.appendChild(svgCurve);
@@ -688,7 +775,73 @@ const jsContent = `// ==UserScript==
                 if (Math.abs(velocity) < 0.05) velocity = 0;
             }
 
-            const isDriftingNow = isDragging || isPostDrifting;
+            const dt = Math.min((now - lastLoopTime) / 1000, 0.1);
+            lastLoopTime = now;
+
+            // ─── Lógica del adelantamiento de Bunta (Subaru Impreza GC8) ───
+            if (isPlaying && !isDragging && !buntaActive && now >= nextBuntaTime) {
+                buntaActive = true;
+                buntaX = -80;
+                buntaYOffset = -6;
+                surpriseStartTime = 0;
+                if (impreza) impreza.style.display = "block";
+            }
+
+            const halfW = CAR_WIDTH / 2;
+            const t = Math.max(0, Math.min(progress, 1));
+            const carX = t * w;
+            const carY = baseline - 4 * t * (1 - t) * archHeight;
+            const clampedCarX = Math.max(halfW, Math.min(carX, w - halfW));
+
+            if (buntaActive) {
+                if (!isPlaying) {
+                    buntaActive = false;
+                    if (impreza) impreza.style.display = "none";
+                } else {
+                    const buntaSpeed = 260; // px / seg
+                    buntaX += buntaSpeed * dt;
+
+                    // Overtake path: por el carril superior (-6px) y al rebasar se alinea hacia adelante
+                    if (buntaX > clampedCarX + 55) {
+                        buntaYOffset += (-1.0 - buntaYOffset) * 0.08;
+                    } else {
+                        buntaYOffset += (-6.0 - buntaYOffset) * 0.12;
+                    }
+
+                    // Sobreviraje por sorpresa en el instante que Bunta se pone al lado del AE86
+                    if (buntaX >= clampedCarX - 15 && surpriseStartTime === 0) {
+                        surpriseStartTime = now;
+                    }
+
+                    if (impreza) {
+                        impreza.style.left = (buntaX - 27) + "px";
+                        impreza.style.top = (carY - 10 + buntaYOffset) + "px";
+                        impreza.style.display = "block";
+                    }
+
+                    // Humo de escape bóxer del Subaru
+                    emitCruisingSmoke(buntaX - 27, carY + buntaYOffset + 4, currentRoad);
+
+                    if (buntaX > w + 90) {
+                        buntaActive = false;
+                        if (impreza) impreza.style.display = "none";
+                        nextBuntaTime = now + (90 + Math.random() * 150) * 1000;
+                    }
+                }
+            } else {
+                if (impreza && impreza.style.display !== "none") {
+                    impreza.style.display = "none";
+                }
+            }
+
+            // Física de reacción del AE86: sobreviraje y oscilación de volante por la sorpresa
+            const surpriseElapsed = surpriseStartTime > 0 ? (now - surpriseStartTime) / 1000 : 999;
+            const isSurprised = surpriseElapsed < 1.3;
+            const surpriseDecay = isSurprised ? Math.max(0, 1 - surpriseElapsed / 1.3) : 0;
+            const surpriseWobble = isSurprised ? Math.sin(surpriseElapsed * 24) * 8.5 * Math.pow(surpriseDecay, 1.2) : 0;
+            const isSurpriseDrifting = isSurprised && surpriseElapsed < 0.65;
+
+            const isDriftingNow = isDragging || isPostDrifting || isSurpriseDrifting;
             car.classList.toggle("drifting", isDriftingNow);
 
             const showCurve = isDragging || isPostDrifting || archHeight > 0.4;
@@ -747,13 +900,6 @@ const jsContent = `// ==UserScript==
                 if (pathStripes) pathStripes.setAttribute("d", stripesD);
             }
 
-            const t = Math.max(0, Math.min(progress, 1));
-            const carX = t * w;
-            const carY = baseline - 4 * t * (1 - t) * archHeight;
-
-            const halfW = CAR_WIDTH / 2;
-            const clampedCarX = Math.max(halfW, Math.min(carX, w - halfW));
-
             const tangentDy = -4 * (1 - 2 * t) * archHeight;
             const curveAngle = Math.atan2(tangentDy, w) * (180 / Math.PI);
             const totalAngle = isDriftingNow ? (curveAngle * Math.min(1, driftDecay * 1.3)) : 0;
@@ -767,10 +913,12 @@ const jsContent = `// ==UserScript==
 
             car.style.left = (clampedCarX - halfW) + "px";
             car.style.top = (carY - 10 + bounce) + "px";
-            car.style.transform = "rotate(" + (totalAngle + dynamicRoll).toFixed(2) + "deg)";
+            car.style.transform = "rotate(" + (totalAngle + dynamicRoll + surpriseWobble).toFixed(2) + "deg)";
 
             if (isDriftingNow) {
-                const smokeScale = (1.0 + Math.min(Math.abs(velocity), 3) * 0.25) * Math.max(0.6, driftDecay);
+                const smokeScale = isSurpriseDrifting
+                    ? (1.3 * surpriseDecay)
+                    : ((1.0 + Math.min(Math.abs(velocity), 3) * 0.25) * Math.max(0.6, driftDecay));
                 emitSmoke(clampedCarX - halfW + 6, carY + 4, smokeScale, currentRoad);
             } else if (isPlaying) {
                 emitCruisingSmoke(clampedCarX - halfW + 1, carY + 3, currentRoad);
