@@ -267,7 +267,7 @@ const jsContent = `// ==UserScript==
                 width: 100%;
                 height: 100%;
                 display: block;
-                shape-rendering: crispEdges;
+                shape-rendering: geometricPrecision;
             }
             #\${CAR_ID}.paused .ae86-driver-takumi {
                 display: none;
@@ -290,55 +290,60 @@ const jsContent = `// ==UserScript==
                 width: 100%;
                 height: 100%;
                 display: block;
-                shape-rendering: crispEdges;
+                shape-rendering: geometricPrecision;
             }
 
-            /* Estela sutil de humo del cigarrillo de Bunta */
+            /* Estela viva y sutil de humo del cigarrillo de Bunta */
             .bunta-smoke-container {
                 position: absolute;
-                right: -2px;
-                top: 2.8px;
+                left: 29.8px;
+                bottom: 11.8px;
                 width: 1px;
                 height: 1px;
                 pointer-events: none;
+                z-index: 10;
             }
             .bunta-smoke-puff {
                 position: absolute;
                 top: 0;
                 left: 0;
-                width: 2.2px;
-                height: 2.2px;
-                background: rgba(235, 240, 250, 0.75);
+                width: 2.4px;
+                height: 2.4px;
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(225, 235, 250, 0.75) 60%, rgba(200, 215, 240, 0) 100%);
                 border-radius: 50%;
-                filter: blur(0.5px);
+                filter: blur(0.4px);
                 pointer-events: none;
-                animation: bunta-smoke-wisp 1.35s infinite ease-out;
+                animation: bunta-smoke-wisp 1.25s infinite ease-out;
             }
             .bunta-smoke-puff.p1 {
                 animation-delay: 0s;
             }
             .bunta-smoke-puff.p2 {
-                animation-delay: 0.45s;
+                animation-delay: 0.42s;
             }
             .bunta-smoke-puff.p3 {
-                animation-delay: 0.9s;
+                animation-delay: 0.84s;
             }
 
             @keyframes bunta-smoke-wisp {
                 0% {
-                    transform: translate(0, 0) scale(0.7);
-                    opacity: 0.85;
+                    transform: translate(0, 0) scale(0.6);
+                    opacity: 0.9;
                 }
-                35% {
-                    transform: translate(-3.5px, -1.8px) scale(1.3);
-                    opacity: 0.65;
+                20% {
+                    transform: translate(0.6px, -1.8px) scale(0.9);
+                    opacity: 0.8;
                 }
-                70% {
-                    transform: translate(-8.5px, -3.8px) scale(2.0);
+                45% {
+                    transform: translate(-2.2px, -3.8px) scale(1.4);
+                    opacity: 0.6;
+                }
+                75% {
+                    transform: translate(-6.5px, -5.6px) scale(2.0);
                     opacity: 0.35;
                 }
                 100% {
-                    transform: translate(-14px, -5.5px) scale(2.8);
+                    transform: translate(-12px, -7.2px) scale(2.7);
                     opacity: 0;
                 }
             }
@@ -618,18 +623,41 @@ const jsContent = `// ==UserScript==
         wrapper.className = "driving";
         wrapper.innerHTML = \`
             <div class="ae86-driver-takumi">
-                <svg viewBox="0 0 16 11" class="takumi-svg">
-                    <rect x="2" y="7" width="9" height="4" fill="#f5f5fa" />
-                    <rect x="4" y="7" width="3" height="2" fill="#2d3038" />
-                    <rect x="8" y="7" width="5" height="2" fill="#f5f5fa" />
-                    <rect x="12" y="7" width="2" height="2" fill="#f0cbaf" />
-                    <rect x="5" y="4" width="6" height="4" fill="#f0cbaf" />
-                    <polygon points="11,5 12,6 11,7" fill="#f0cbaf" />
-                    <rect x="3" y="1" width="7" height="4" fill="#442c1c" />
-                    <rect x="4" y="0" width="5" height="2" fill="#583924" />
-                    <polygon points="9,2 12,3 11,5 9,4" fill="#442c1c" />
-                    <rect x="8" y="5" width="2" height="1" fill="#151515" />
-                    <rect x="8" y="4" width="3" height="1" fill="#382315" />
+                <svg viewBox="0 0 19 12" class="takumi-svg">
+                    <!-- Asiento TRD oscuro -->
+                    <path d="M1,2 Q1.8,1 2.8,1 L3.2,4.5 L1.8,12 L0.5,12 Z" fill="#1c1e24" />
+                    <rect x="1.5" y="0.8" width="1.6" height="2.2" rx="0.5" fill="#14161a" />
+                    <!-- Torso (polo blanco concentrado) -->
+                    <polygon points="2.8,7 6.5,7 8.5,12 2,12" fill="#f5f5fa" />
+                    <rect x="5.2" y="5.2" width="1.8" height="1.8" fill="#f0cbaf" />
+                    <rect x="5.1" y="6.8" width="2" height="0.8" fill="#2d3038" />
+                    <!-- Cabeza y mandíbula anime -->
+                    <polygon points="4.8,3.4 8.6,3.4 9.2,5.2 8.4,6.4 5.8,6.6 4.8,5.4" fill="#f0cbaf" />
+                    <polygon points="8.6,4.8 9.5,5.2 8.6,5.6" fill="#f0cbaf" />
+                    <!-- Ojos concentrados -->
+                    <line x1="6.8" y1="4.6" x2="8.6" y2="4.6" stroke="#18181c" stroke-width="0.7" stroke-linecap="round" />
+                    <line x1="6.6" y1="4.0" x2="8.6" y2="4.0" stroke="#4a2e1c" stroke-width="0.4" stroke-linecap="round" />
+                    <circle cx="8.3" cy="4.5" r="0.25" fill="#ffffff" />
+                    <!-- Pelo castaño en capas -->
+                    <polygon points="2.8,2.8 7.5,2.8 7.2,5 2.2,5" fill="#442c1c" />
+                    <polygon points="2.2,3.8 3.8,3.8 3.4,6.2 2,6.2" fill="#442c1c" />
+                    <path d="M3.2,2.8 C3.6,1.2 5.5,0.8 8.2,1.2 L8.8,2.2 L6.6,2.8 Z" fill="#583924" />
+                    <polygon points="5.8,3 9.4,3.6 8.8,4.8 6.5,4.2" fill="#442c1c" />
+                    <polygon points="8.4,3.8 9.4,4.4 8.2,4.8" fill="#442c1c" />
+                    <!-- Aro del volante inclinado -->
+                    <line x1="14.2" y1="3.8" x2="13.0" y2="11.5" stroke="#22252c" stroke-width="1.2" stroke-linecap="round" />
+                    <line x1="14.3" y1="3.8" x2="13.1" y2="11.5" stroke="#505666" stroke-width="0.28" />
+                    <!-- Brazo izquierdo en borde inferior del volante -->
+                    <polygon points="5.2,7.6 10.5,8.5 11.5,9.4 5.8,9.4" fill="#d2d5e0" />
+                    <polygon points="11,8.5 12.6,8.3 12.8,9.4 11.2,9.4" fill="#e0b294" />
+                    <!-- Brazo derecho con curva anatómica natural (hombro -> codo -> antebrazo al volante) -->
+                    <polygon points="4.2,7.2 6.2,7.2 8.0,10.2 6.0,11.0" fill="#f5f5fa" />
+                    <polygon points="6.2,10.8 7.6,10.0 8.0,10.4 6.4,11.2" fill="#d0d4de" />
+                    <polygon points="6.4,10.4 8.0,9.8 12.8,7.2 12.2,8.6" fill="#f5f5fa" />
+                    <line x1="6.4" y1="10.4" x2="7.8" y2="9.8" stroke="#bcc2ce" stroke-width="0.35" />
+                    <!-- Mano derecha agarrando el volante -->
+                    <polygon points="12.2,6.8 13.8,6.5 14.1,7.8 12.6,8.0" fill="#f0cbaf" />
+                    <line x1="13.0" y1="6.7" x2="13.0" y2="7.6" stroke="#c89b7c" stroke-width="0.3" />
                 </svg>
             </div>
             <img class="ae86-img ae86-idle" src="\${AE86_IDLE}" alt="AE86 Pausa (3/4 frontal)" draggable="false" />
@@ -650,30 +678,51 @@ const jsContent = `// ==UserScript==
         wrapper.innerHTML = \`
             <div class="impreza-body">
                 <div class="impreza-driver-bunta">
-                    <svg viewBox="0 0 18 12" class="bunta-svg">
-                        <rect x="2" y="7" width="10" height="5" fill="#282e3c" />
-                        <rect x="5" y="7" width="3" height="2" fill="#1a1e28" />
-                        <rect x="10" y="8" width="4" height="2" fill="#282e3c" />
-                        <rect x="13" y="8" width="2" height="2" fill="#eec5a8" />
-                        <rect x="5" y="4" width="7" height="4" fill="#eec5a8" />
-                        <polygon points="12,5 13,6 12,7" fill="#eec5a8" />
-                        <rect x="2" y="2" width="7" height="4" fill="#2a2a2e" />
-                        <polygon points="3,2 4,0 6,2" fill="#46464a" />
-                        <polygon points="6,2 8,0 9,2" fill="#323236" />
-                        <polygon points="9,2 11,1 12,3" fill="#2a2a2e" />
-                        <polygon points="10,3 12,4 11,5" fill="#2a2a2e" />
-                        <rect x="8" y="5" width="3" height="1" fill="#1c1c20" />
-                        <rect x="8" y="4" width="3" height="1" fill="#3a3a40" />
-                        <rect x="11" y="6" width="3" height="1" fill="#ffffff" />
-                        <rect x="14" y="6" width="1" height="1" fill="#ff4d00" />
+                    <svg viewBox="0 0 19 12" class="bunta-svg">
+                        <!-- Asiento oscuro -->
+                        <path d="M1,2 Q1.8,1 2.8,1 L3.2,4.5 L1.8,12 L0.5,12 Z" fill="#14161a" />
+                        <rect x="1.5" y="0.8" width="1.6" height="2.2" rx="0.5" fill="#0e1014" />
+                        <!-- Torso (chaqueta azul marino, postura reclinada relajada) -->
+                        <polygon points="2.4,6.8 6.5,6.8 8.6,12 1.6,12" fill="#222836" />
+                        <rect x="5.2" y="6.5" width="1.8" height="0.8" fill="#161a24" />
+                        <!-- Cuello -->
+                        <rect x="5.0" y="5.2" width="1.8" height="1.5" fill="#eec5a8" />
+                        <!-- Cabeza y mandíbula -->
+                        <polygon points="4.6,3.4 8.4,3.4 9.0,5.0 8.2,6.5 5.5,6.7 4.6,5.4" fill="#eec5a8" />
+                        <polygon points="8.4,4.8 9.4,5.2 8.4,5.6" fill="#eec5a8" />
+                        <line x1="6.2" y1="6.3" x2="8.0" y2="6.2" stroke="#c4997e" stroke-width="0.35" />
+                        <!-- Ojos cerrados legendarios squint (- _ -) -->
+                        <line x1="6.5" y1="4.6" x2="8.5" y2="4.6" stroke="#15161a" stroke-width="0.55" stroke-linecap="round" />
+                        <line x1="6.3" y1="4.1" x2="8.5" y2="4.1" stroke="#282a34" stroke-width="0.35" stroke-linecap="round" />
+                        <line x1="7.2" y1="5.8" x2="8.5" y2="5.8" stroke="#a06550" stroke-width="0.4" stroke-linecap="round" />
+                        <!-- Pelo negro Bunta -->
+                        <polygon points="2.4,2.8 8.2,2.8 7.8,4.8 2.2,4.8" fill="#1f2128" />
+                        <polygon points="4.8,2.8 6.0,1.2 7.0,2.8" fill="#353844" />
+                        <polygon points="6.5,2.8 7.8,1.0 8.8,2.8" fill="#262832" />
+                        <polygon points="8.2,2.8 9.8,1.8 9.4,4.2" fill="#1f2128" />
+                        <polygon points="8.6,4.0 10.2,4.4 9.0,5.0" fill="#1f2128" />
+                        <!-- Volante -->
+                        <line x1="14.2" y1="3.8" x2="13.0" y2="11.5" stroke="#1c1f26" stroke-width="1.2" stroke-linecap="round" />
+                        <line x1="14.3" y1="3.8" x2="13.1" y2="11.5" stroke="#4a5060" stroke-width="0.28" />
+                        <!-- Brazo relajado: el legendario agarre con una mano (codo bajo, antebrazo hacia el volante) -->
+                        <polygon points="3.8,7.0 5.8,7.0 7.2,10.2 5.0,11.0" fill="#262d3e" />
+                        <polygon points="5.4,10.6 7.0,9.8 12.4,8.5 11.8,10.2 6.0,11.2" fill="#2a3246" />
+                        <line x1="11.2" y1="8.8" x2="10.8" y2="10.0" stroke="#1a202c" stroke-width="0.35" />
+                        <!-- Mano reposando relajadamente sobre el volante -->
+                        <polygon points="11.6,8.5 13.2,8.3 13.4,9.5 11.9,9.5" fill="#eec5a8" />
+                        <line x1="12.6" y1="8.4" x2="12.6" y2="9.2" stroke="#c29476" stroke-width="0.3" />
+                        <!-- Cigarrillo entre los labios de Bunta -->
+                        <line x1="8.2" y1="5.6" x2="12.2" y2="5.8" stroke="#f8f9fc" stroke-width="0.5" stroke-linecap="round" />
+                        <rect x="12.2" y="5.4" width="0.9" height="0.8" rx="0.2" fill="#ff4800" />
+                        <rect x="12.5" y="5.6" width="0.5" height="0.5" rx="0.1" fill="#fff275" />
                     </svg>
-                    <div class="bunta-smoke-container">
-                        <div class="bunta-smoke-puff p1"></div>
-                        <div class="bunta-smoke-puff p2"></div>
-                        <div class="bunta-smoke-puff p3"></div>
-                    </div>
                 </div>
                 <img class="impreza-img" src="\${BUNTA_IMPREZA}" alt="Subaru Impreza WRX STI Type R (Bunta)" draggable="false" />
+                <div class="bunta-smoke-container">
+                    <div class="bunta-smoke-puff p1"></div>
+                    <div class="bunta-smoke-puff p2"></div>
+                    <div class="bunta-smoke-puff p3"></div>
+                </div>
             </div>
             <div class="impreza-headlight-lamp"></div>
             <div class="impreza-headlight-glow"></div>
