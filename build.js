@@ -46,13 +46,11 @@ const jsContent = `// ==UserScript==
                 overflow: visible !important;
             }
 
-            .playback-progressbar,
-            [data-testid="playback-progressbar"],
             .playback-bar,
-            .playback-progressbar [data-testid="progress-bar"],
-            [data-testid="playback-progressbar"] [data-testid="progress-bar"],
+            [data-testid="playback-progressbar"],
             .playback-bar [data-testid="progress-bar"],
-            .playback-progressbar .progress-bar,
+            [data-testid="playback-progressbar"] [data-testid="progress-bar"],
+            .playback-bar .progress-bar,
             [data-testid="playback-progressbar"] .progress-bar {
                 position: relative !important;
                 overflow: visible !important;
@@ -229,9 +227,8 @@ const jsContent = `// ==UserScript==
 
 
             /* ─── Calzada de Tokio SOLO en la barra de reproducción (Seekbar) ─── */
-            .playback-progressbar,
-            [data-testid="playback-progressbar"],
-            .playback-bar {
+            .playback-bar,
+            [data-testid="playback-progressbar"] {
                 display: flex !important;
                 align-items: center !important;
                 position: relative !important;
@@ -239,12 +236,10 @@ const jsContent = `// ==UserScript==
                 overflow: visible !important;
             }
 
-            .playback-progressbar .progress-bar,
-            [data-testid="playback-progressbar"] .progress-bar,
             .playback-bar .progress-bar,
-            .playback-progressbar [data-testid="progress-bar"],
-            [data-testid="playback-progressbar"] [data-testid="progress-bar"],
-            .playback-bar [data-testid="progress-bar"] {
+            [data-testid="playback-progressbar"] .progress-bar,
+            .playback-bar [data-testid="progress-bar"],
+            [data-testid="playback-progressbar"] [data-testid="progress-bar"] {
                 height: 18px !important;
                 background: transparent !important;
                 border: none !important;
@@ -257,12 +252,12 @@ const jsContent = `// ==UserScript==
             }
 
             /* Calzada de asfalto japonés de Tokio con arcenes de franjas diagonales blancas (Shutoko / C1) */
-            .playback-progressbar .x-progressBar-background,
-            [data-testid="playback-progressbar"] .x-progressBar-background,
             .playback-bar .x-progressBar-background,
-            .playback-progressbar [data-testid="progress-bar"] > div:first-child,
-            [data-testid="playback-progressbar"] [data-testid="progress-bar"] > div:first-child,
-            .playback-bar [data-testid="progress-bar"] > div:first-child {
+            .playback-bar .x-progressBar-progressBarBg,
+            .playback-bar [data-testid="progress-bar"] > div:first-child,
+            [data-testid="playback-progressbar"] .x-progressBar-background,
+            [data-testid="playback-progressbar"] .x-progressBar-progressBarBg,
+            [data-testid="playback-progressbar"] [data-testid="progress-bar"] > div:first-child {
                 position: relative !important;
                 top: 0 !important;
                 left: 0 !important;
@@ -306,22 +301,25 @@ const jsContent = `// ==UserScript==
                 transition: none !important;
             }
 
-            .playback-progressbar:hover .x-progressBar-background,
-            .playback-progressbar:active .x-progressBar-background,
-            [data-testid="playback-progressbar"]:hover .x-progressBar-background,
-            [data-testid="playback-progressbar"]:active .x-progressBar-background,
             .playback-bar:hover .x-progressBar-background,
             .playback-bar:active .x-progressBar-background,
-            .playback-progressbar [class*="is-dragging"] .x-progressBar-background,
-            [data-testid="playback-progressbar"] [class*="is-dragging"] .x-progressBar-background {
+            .playback-bar:hover .x-progressBar-progressBarBg,
+            .playback-bar:active .x-progressBar-progressBarBg,
+            [data-testid="playback-progressbar"]:hover .x-progressBar-background,
+            [data-testid="playback-progressbar"]:active .x-progressBar-background,
+            [data-testid="playback-progressbar"]:hover .x-progressBar-progressBarBg,
+            [data-testid="playback-progressbar"]:active .x-progressBar-progressBarBg,
+            .playback-bar [class*="is-dragging"] .x-progressBar-background,
+            .playback-bar [class*="is-dragging"] .x-progressBar-progressBarBg,
+            [data-testid="playback-progressbar"] [class*="is-dragging"] .x-progressBar-background,
+            [data-testid="playback-progressbar"] [class*="is-dragging"] .x-progressBar-progressBarBg {
                 height: 18px !important;
                 background-color: #1e2025 !important;
             }
 
             /* Progreso iluminado SOLO en la barra de reproducción */
-            .playback-progressbar .x-progressBar-fillColor,
-            [data-testid="playback-progressbar"] .x-progressBar-fillColor,
-            .playback-bar .x-progressBar-fillColor {
+            .playback-bar .x-progressBar-fillColor,
+            [data-testid="playback-progressbar"] .x-progressBar-fillColor {
                 background: linear-gradient(90deg, rgba(29, 185, 84, 0.25) 0%, rgba(29, 185, 84, 0.55) 100%) !important;
                 height: 100% !important;
                 border-radius: 0px !important;
@@ -330,13 +328,12 @@ const jsContent = `// ==UserScript==
             }
 
             /* Ocultar el cursor/thumb circular de Spotify SOLO en la barra de reproducción */
-            .playback-progressbar .progress-bar__slider,
-            .playback-progressbar:hover .progress-bar__slider,
-            [data-testid="playback-progressbar"] .progress-bar__slider,
-            [data-testid="playback-progressbar"]:hover .progress-bar__slider,
             .playback-bar .progress-bar__slider,
             .playback-bar:hover .progress-bar__slider,
-            .playback-progressbar [class*="is-dragging"] .progress-bar__slider {
+            [data-testid="playback-progressbar"] .progress-bar__slider,
+            [data-testid="playback-progressbar"]:hover .progress-bar__slider,
+            .playback-bar [class*="is-dragging"] .progress-bar__slider,
+            [data-testid="playback-progressbar"] [class*="is-dragging"] .progress-bar__slider {
                 opacity: 0 !important;
                 width: 0 !important;
                 height: 0 !important;
@@ -345,10 +342,16 @@ const jsContent = `// ==UserScript==
             }
 
             /* Ocultar lineas planas nativas durante la curva */
-            .ae86-hide-native .progress-bar__slider,
-            .ae86-hide-native .x-progressBar-fillColor,
-            .ae86-hide-native .x-progressBar-background,
-            .ae86-hide-native [data-testid="progress-bar"] > div:not(#\${CAR_ID}):not(#\${SVG_CURVE_ID}) {
+            .playback-bar.ae86-hide-native .progress-bar__slider,
+            .playback-bar.ae86-hide-native .x-progressBar-fillColor,
+            .playback-bar.ae86-hide-native .x-progressBar-background,
+            .playback-bar.ae86-hide-native .x-progressBar-progressBarBg,
+            .playback-bar.ae86-hide-native [data-testid="progress-bar"] > div:not(#\${CAR_ID}):not(#\${SVG_CURVE_ID}),
+            [data-testid="playback-progressbar"].ae86-hide-native .progress-bar__slider,
+            [data-testid="playback-progressbar"].ae86-hide-native .x-progressBar-fillColor,
+            [data-testid="playback-progressbar"].ae86-hide-native .x-progressBar-background,
+            [data-testid="playback-progressbar"].ae86-hide-native .x-progressBar-progressBarBg,
+            [data-testid="playback-progressbar"].ae86-hide-native [data-testid="progress-bar"] > div:not(#\${CAR_ID}):not(#\${SVG_CURVE_ID}) {
                 opacity: 0 !important;
             }
 
@@ -357,38 +360,59 @@ const jsContent = `// ==UserScript==
                 z-index: 1 !important;
             }
 
-            /* ─── Proteccion estricta del slider de volumen de Spotify ─── */
-            .volume-bar,
+            /* ─── Protección estricta del slider de volumen de Spotify ─── */
+            .main-nowPlayingBar-volumeBar,
             [data-testid="volume-bar"],
-            .main-nowPlayingBar-right .volume-bar,
-            .volume-bar [data-testid="progress-bar"],
-            .volume-bar .progress-bar,
+            .volume-bar,
             .main-nowPlayingBar-right [data-testid="progress-bar"],
-            .main-nowPlayingBar-right .progress-bar {
+            .main-nowPlayingBar-volumeBar [data-testid="progress-bar"],
+            [data-testid="volume-bar"] [data-testid="progress-bar"],
+            .volume-bar [data-testid="progress-bar"],
+            .main-nowPlayingBar-right .progress-bar,
+            .main-nowPlayingBar-volumeBar .progress-bar,
+            [data-testid="volume-bar"] .progress-bar,
+            .volume-bar .progress-bar {
                 height: auto !important;
                 background: transparent !important;
                 background-image: none !important;
                 border: none !important;
                 box-shadow: none !important;
             }
+            .main-nowPlayingBar-right .x-progressBar-progressBarBg,
+            .main-nowPlayingBar-right .x-progressBar-background,
+            .main-nowPlayingBar-right [data-testid="progress-bar"] > div:first-child,
+            .main-nowPlayingBar-volumeBar .x-progressBar-progressBarBg,
+            .main-nowPlayingBar-volumeBar .x-progressBar-background,
+            .main-nowPlayingBar-volumeBar [data-testid="progress-bar"] > div:first-child,
+            [data-testid="volume-bar"] .x-progressBar-progressBarBg,
+            [data-testid="volume-bar"] .x-progressBar-background,
+            [data-testid="volume-bar"] [data-testid="progress-bar"] > div:first-child,
+            .volume-bar .x-progressBar-progressBarBg,
             .volume-bar .x-progressBar-background,
-            .main-nowPlayingBar-right .volume-bar .x-progressBar-background {
-                height: 4px !important;
+            .volume-bar [data-testid="progress-bar"] > div:first-child {
+                height: var(--progress-bar-height, 4px) !important;
                 background-image: none !important;
+                background-color: var(--bg-color, var(--spice-subtext, rgba(255, 255, 255, 0.3))) !important;
                 border: none !important;
                 box-shadow: none !important;
-                border-radius: 2px !important;
+                border-radius: var(--progress-bar-radius, 2px) !important;
             }
-            .volume-bar .x-progressBar-fillColor,
-            .main-nowPlayingBar-right .volume-bar .x-progressBar-fillColor {
+            .main-nowPlayingBar-right .x-progressBar-fillColor,
+            .main-nowPlayingBar-volumeBar .x-progressBar-fillColor,
+            [data-testid="volume-bar"] .x-progressBar-fillColor,
+            .volume-bar .x-progressBar-fillColor {
                 border-right: none !important;
                 box-shadow: none !important;
-                border-radius: 2px !important;
+                border-radius: var(--progress-bar-radius, 2px) !important;
             }
-            .volume-bar .progress-bar__slider,
-            .main-nowPlayingBar-right .volume-bar .progress-bar__slider {
+            .main-nowPlayingBar-right .progress-bar__slider,
+            .main-nowPlayingBar-volumeBar .progress-bar__slider,
+            [data-testid="volume-bar"] .progress-bar__slider,
+            .volume-bar .progress-bar__slider {
                 display: block !important;
                 pointer-events: auto !important;
+                width: 12px !important;
+                height: 12px !important;
             }
         \`;
 
@@ -410,13 +434,12 @@ const jsContent = `// ==UserScript==
     }
 
     function getPlaybackTarget() {
-        return document.querySelector('.playback-progressbar [data-testid="progress-bar"]') ||
+        return document.querySelector('.playback-bar [data-testid="progress-bar"]') ||
                document.querySelector('[data-testid="playback-progressbar"] [data-testid="progress-bar"]') ||
-               document.querySelector('.playback-bar [data-testid="progress-bar"]') ||
-               document.querySelector('.playback-progressbar .progress-bar') ||
-               document.querySelector('.playback-progressbar') ||
-               document.querySelector('[data-testid="playback-progressbar"]') ||
-               document.querySelector('.playback-bar');
+               document.querySelector('.playback-bar .progress-bar') ||
+               document.querySelector('[data-testid="playback-progressbar"] .progress-bar') ||
+               document.querySelector('.playback-bar') ||
+               document.querySelector('[data-testid="playback-progressbar"]');
     }
 
     function isPlayerPlaying() {
@@ -594,7 +617,7 @@ const jsContent = `// ==UserScript==
                 if (!foundProgress) {
                     const input = currentRoad.querySelector?.('input[type="range"]') || 
                                   currentRoad.parentElement?.querySelector?.('input[type="range"]') ||
-                                  document.querySelector('.playback-progressbar input[type="range"], [data-testid="playback-progressbar"] input[type="range"]');
+                                  document.querySelector('.playback-bar input[type="range"], [data-testid="playback-progressbar"] input[type="range"]');
                     if (input && input.max && parseFloat(input.max) > 0) {
                         const val = parseFloat(input.value) / parseFloat(input.max);
                         if (!isNaN(val) && val >= 0 && val <= 1) {
@@ -669,7 +692,7 @@ const jsContent = `// ==UserScript==
             car.classList.toggle("drifting", isDriftingNow);
 
             const showCurve = isDragging || isPostDrifting || archHeight > 0.4;
-            const containerElem = currentRoad.closest('.playback-progressbar, [data-testid="playback-progressbar"], .playback-bar') || currentRoad;
+            const containerElem = currentRoad.closest('.playback-bar, [data-testid="playback-progressbar"]') || currentRoad;
             containerElem.classList.toggle("ae86-hide-native", showCurve);
             svgCurve.style.display = showCurve ? "block" : "none";
 
@@ -759,9 +782,9 @@ const jsContent = `// ==UserScript==
 
         function isProgressBarElement(elem) {
             if (!elem) return false;
-            if (elem.closest?.('.volume-bar, [data-testid="volume-bar"], .main-nowPlayingBar-right')) return false;
+            if (elem.closest?.('.volume-bar, [data-testid="volume-bar"], .main-nowPlayingBar-right, .main-nowPlayingBar-volumeBar')) return false;
             return !!(
-                elem.closest?.('.playback-progressbar, .playback-bar, [data-testid="playback-progressbar"], [data-testid="progress-bar"]')
+                elem.closest?.('.playback-bar, [data-testid="playback-progressbar"]')
             );
         }
 
