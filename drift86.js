@@ -566,7 +566,7 @@
         let buntaActive = false;
         let buntaX = -80;
         let buntaYOffset = -6;
-        let nextBuntaTime = performance.now() + (35 + Math.random() * 45) * 1000;
+        let nextBuntaTime = performance.now() + 10 * 1000;
         let surpriseStartTime = 0;
         let lastLoopTime = performance.now();
 
@@ -578,6 +578,26 @@
             surpriseStartTime = 0;
             if (impreza) impreza.style.display = "block";
         };
+
+        // Atajo de teclado: Tecla 'B' para llamar a Bunta inmediatamente
+        if (!window.__ae86BuntaKeyBound) {
+            window.__ae86BuntaKeyBound = true;
+            window.addEventListener("keydown", (e) => {
+                if ((e.key === "b" || e.key === "B") && !["INPUT", "TEXTAREA"].includes(e.target && e.target.tagName)) {
+                    window.__triggerBuntaOvertake();
+                }
+            });
+        }
+
+        // Click directo en el AE86
+        car.style.cursor = "pointer";
+        car.title = "AE86 (Click o tecla 'B' para llamar a Bunta)";
+        car.onclick = (e) => {
+            e.stopPropagation();
+            window.__triggerBuntaOvertake();
+        };
+
+        let buntaBtn = document.getElementById("ae86-bunta-btn");
 
         const CAR_WIDTH = 52;
 
@@ -651,6 +671,23 @@
             }
             if (svgCurve.parentElement !== currentRoad) {
                 currentRoad.appendChild(svgCurve);
+            }
+
+            const pControls = document.querySelector(".player-controls__right") || document.querySelector(".player-controls__buttons");
+            if (pControls && (!buntaBtn || buntaBtn.parentElement !== pControls)) {
+                if (!buntaBtn) {
+                    buntaBtn = document.createElement("button");
+                    buntaBtn.id = "ae86-bunta-btn";
+                    buntaBtn.className = "main-actionButtons-button";
+                    buntaBtn.title = "Adelantamiento Bunta GC8 (Hotkey: B)";
+                    buntaBtn.innerHTML = '<span style="font-size: 11px; font-weight: 800; color: #4da6ff; background: rgba(0, 102, 255, 0.15); border: 1px solid rgba(77, 166, 255, 0.4); border-radius: 4px; padding: 2px 5px; font-family: monospace;">GC8</span>';
+                    buntaBtn.style.cssText = "background: none; border: none; cursor: pointer; padding: 0 4px; display: inline-flex; align-items: center; justify-content: center; transition: transform 0.1s;";
+                    buntaBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        window.__triggerBuntaOvertake();
+                    };
+                }
+                pControls.appendChild(buntaBtn);
             }
 
             const rect = currentRoad.getBoundingClientRect();
@@ -776,39 +813,34 @@
             const clampedCarX = Math.max(halfW, Math.min(carX, w - halfW));
 
             if (buntaActive) {
-                if (!isPlaying) {
+                const buntaSpeed = 260; // px / seg
+                buntaX += buntaSpeed * dt;
+
+                // Overtake path: por el carril superior (-6px) y al rebasar se alinea hacia adelante
+                if (buntaX > clampedCarX + 55) {
+                    buntaYOffset += (-1.0 - buntaYOffset) * 0.08;
+                } else {
+                    buntaYOffset += (-6.0 - buntaYOffset) * 0.12;
+                }
+
+                // Sobreviraje por sorpresa en el instante que Bunta se pone al lado del AE86
+                if (buntaX >= clampedCarX - 15 && surpriseStartTime === 0) {
+                    surpriseStartTime = now;
+                }
+
+                if (impreza) {
+                    impreza.style.left = (buntaX - 27) + "px";
+                    impreza.style.top = (carY - 10 + buntaYOffset) + "px";
+                    impreza.style.display = "block";
+                }
+
+                // Humo de escape bóxer del Subaru
+                emitCruisingSmoke(buntaX - 27, carY + buntaYOffset + 4, currentRoad);
+
+                if (buntaX > w + 90) {
                     buntaActive = false;
                     if (impreza) impreza.style.display = "none";
-                } else {
-                    const buntaSpeed = 260; // px / seg
-                    buntaX += buntaSpeed * dt;
-
-                    // Overtake path: por el carril superior (-6px) y al rebasar se alinea hacia adelante
-                    if (buntaX > clampedCarX + 55) {
-                        buntaYOffset += (-1.0 - buntaYOffset) * 0.08;
-                    } else {
-                        buntaYOffset += (-6.0 - buntaYOffset) * 0.12;
-                    }
-
-                    // Sobreviraje por sorpresa en el instante que Bunta se pone al lado del AE86
-                    if (buntaX >= clampedCarX - 15 && surpriseStartTime === 0) {
-                        surpriseStartTime = now;
-                    }
-
-                    if (impreza) {
-                        impreza.style.left = (buntaX - 27) + "px";
-                        impreza.style.top = (carY - 10 + buntaYOffset) + "px";
-                        impreza.style.display = "block";
-                    }
-
-                    // Humo de escape bóxer del Subaru
-                    emitCruisingSmoke(buntaX - 27, carY + buntaYOffset + 4, currentRoad);
-
-                    if (buntaX > w + 90) {
-                        buntaActive = false;
-                        if (impreza) impreza.style.display = "none";
-                        nextBuntaTime = now + (90 + Math.random() * 150) * 1000;
-                    }
+                    nextBuntaTime = now + 10 * 1000;
                 }
             } else {
                 if (impreza && impreza.style.display !== "none") {
