@@ -62,7 +62,6 @@
                 z-index: 100000 !important;
                 transform-origin: 50% 90%;
                 will-change: transform, left, top;
-                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
                 transition: none;
                 opacity: 1 !important;
                 visibility: visible !important;
@@ -83,6 +82,7 @@
                 opacity: 0;
                 transition: opacity 0.12s ease;
                 z-index: 2;
+                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
             }
 
             /* Vista 1: Pausa / Detenido (viendo hacia adelante en ángulo 3/4 con intermitentes ámbar activos) */
@@ -133,33 +133,35 @@
                 right: 1.2px;
             }
 
-            /* Proyección potente y realista de los faros sobre el asfalto (ambos coches casi igual) */
+            /* Proyección potente y luminosa de los faros sobre el asfalto (hace brillar la carretera) */
             .ae86-headlight-beam {
                 position: absolute;
-                right: -64px;
-                bottom: -1px;
-                width: 66px;
-                height: 16px;
+                right: -123px;
+                bottom: -2px;
+                width: 125px;
+                height: 22px;
                 background: radial-gradient(
-                    ellipse 85% 65% at 0% 55%,
-                    rgba(255, 252, 230, 0.78) 0%,
-                    rgba(255, 246, 210, 0.48) 25%,
-                    rgba(255, 240, 190, 0.22) 55%,
-                    rgba(255, 235, 170, 0.06) 82%,
+                    ellipse 90% 70% at 0% 50%,
+                    rgba(255, 255, 235, 0.94) 0%,
+                    rgba(255, 250, 205, 0.78) 22%,
+                    rgba(255, 240, 175, 0.52) 50%,
+                    rgba(255, 225, 140, 0.25) 75%,
+                    rgba(255, 215, 110, 0.08) 90%,
                     transparent 100%
                 );
                 border-radius: 0 50% 50% 0;
                 pointer-events: none;
                 mix-blend-mode: screen;
                 z-index: 3;
-                filter: blur(1.5px);
+                filter: blur(0.8px);
+                box-shadow: 0 0 14px 2px rgba(255, 245, 180, 0.45);
                 transition: opacity 0.25s ease;
             }
             #${CAR_ID}.paused .ae86-headlight-beam {
                 opacity: 0.15;
             }
             #${CAR_ID}.drifting .ae86-headlight-beam {
-                opacity: 0.55;
+                opacity: 0.70;
             }
 
             /* Subaru Impreza WRX STI Type R (Bunta Fujiwara Easter Egg) */
@@ -213,26 +215,28 @@
                 z-index: 5;
             }
 
-            /* Proyección potente y realista de los faros sobre el asfalto (ambos coches casi igual) */
+            /* Proyección potente y luminosa de los faros sobre el asfalto (Impreza) */
             #${IMPREZA_ID} .impreza-headlight-beam {
                 position: absolute;
-                right: -64px;
-                bottom: -1px;
-                width: 66px;
-                height: 16px;
+                right: -123px;
+                bottom: -2px;
+                width: 125px;
+                height: 22px;
                 background: radial-gradient(
-                    ellipse 85% 65% at 0% 50%,
-                    rgba(250, 252, 255, 0.78) 0%,
-                    rgba(240, 248, 255, 0.48) 25%,
-                    rgba(225, 240, 255, 0.22) 55%,
-                    rgba(215, 235, 255, 0.06) 82%,
+                    ellipse 90% 70% at 0% 50%,
+                    rgba(250, 253, 255, 0.94) 0%,
+                    rgba(235, 248, 255, 0.78) 22%,
+                    rgba(215, 240, 255, 0.52) 50%,
+                    rgba(195, 230, 255, 0.25) 75%,
+                    rgba(180, 220, 255, 0.08) 90%,
                     transparent 100%
                 );
                 border-radius: 0 50% 50% 0;
                 pointer-events: none;
                 mix-blend-mode: screen;
                 z-index: 3;
-                filter: blur(1.5px);
+                filter: blur(0.8px);
+                box-shadow: 0 0 14px 2px rgba(200, 235, 255, 0.45);
             }
 
             /* Luces traseras rojas estacionarias (Siempre encendidas durante la animación) */
