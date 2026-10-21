@@ -685,24 +685,48 @@ const jsContent = `// ==UserScript==
                     <path d="M3.2,2.8 C3.6,1.2 5.5,0.8 8.2,1.2 L8.8,2.2 L6.6,2.8 Z" fill="#583924" />
                     <polygon points="5.8,3 9.4,3.6 8.8,4.8 6.5,4.2" fill="#442c1c" />
                     <polygon points="8.4,3.8 9.4,4.4 8.2,4.8" fill="#442c1c" />
-                    
-                    <!-- Palanca de cambios (Gear Shifter) -->
-                    <line x1="10.8" y1="12" x2="11.5" y2="9.8" stroke="#8a90a0" stroke-width="0.45" stroke-linecap="round" />
-                    <circle cx="11.5" cy="9.6" r="0.55" fill="#181a20" />
-                    
-                    <!-- Brazo izquierdo: mano baja agarrando el volante nativo del auto en X ~15 -->
-                    <polygon points="4.8,7.6 10.5,8.5 15.0,8.8 14.5,9.6 5.4,9.6" fill="#d2d5e0" />
-                    <polygon points="14.4,8.5 15.6,8.5 15.6,9.5 14.4,9.5" fill="#e0b294" />
-                    
-                    <!-- Brazo derecho animado: mano baja que va de arriba a abajo en la caja de cambios -->
+
+                    <!-- TABLERO (Dashboard) AE86: estilo ochentero angular con cuadro de instrumentos -->
+                    <polygon points="10.8,9.4 12.5,7.8 19,6.8 19,12 10.5,12" fill="#1a1c22" />
+                    <line x1="12.5" y1="7.8" x2="19" y2="6.8" stroke="#383d4c" stroke-width="0.35" />
+                    <line x1="10.8" y1="9.4" x2="12.5" y2="7.8" stroke="#2c303c" stroke-width="0.35" />
+
+                    <!-- Cuadro de instrumentos (Instrument Cluster Binnacle) -->
+                    <polygon points="11.4,7.2 14.0,7.0 14.2,8.2 11.2,8.4" fill="#121418" />
+                    <line x1="11.4" y1="7.2" x2="14.0" y2="7.0" stroke="#505668" stroke-width="0.25" />
+                    <!-- Agujas retroiluminadas Toyota (naranja tacómetro y verde velocímetro) -->
+                    <circle cx="12.2" cy="7.7" r="0.35" fill="#080a0e" />
+                    <circle cx="12.2" cy="7.7" r="0.15" fill="#ff9c20" />
+                    <circle cx="13.2" cy="7.7" r="0.35" fill="#080a0e" />
+                    <circle cx="13.2" cy="7.7" r="0.15" fill="#78e696" />
+
+                    <!-- Consola central y palanca de cambios (Gear Shifter) -->
+                    <polygon points="8.2,10.6 11.2,10.6 11.2,12 7.8,12" fill="#20222a" />
+                    <line x1="9.4" y1="12" x2="9.9" y2="10.2" stroke="#9096a6" stroke-width="0.4" stroke-linecap="round" />
+                    <circle cx="9.9" cy="10.0" r="0.45" fill="#14161a" />
+
+                    <!-- Columna de dirección y Volante deportivo colocado cerca del conductor -->
+                    <line x1="12.0" y1="8.6" x2="10.8" y2="9.4" stroke="#242834" stroke-width="0.7" stroke-linecap="round" />
+                    <!-- Aro del volante Momo/Nardi a 72° -->
+                    <line x1="10.6" y1="6.4" x2="9.6" y2="10.5" stroke="#16181d" stroke-width="1.1" stroke-linecap="round" />
+                    <line x1="10.7" y1="6.5" x2="9.7" y2="10.4" stroke="#484f60" stroke-width="0.28" />
+                    <!-- Centro del volante con logo amarillo -->
+                    <circle cx="10.0" cy="8.3" r="0.5" fill="#101216" />
+                    <circle cx="10.0" cy="8.3" r="0.18" fill="#f0c028" />
+
+                    <!-- Brazo izquierdo: mano lejana agarrando el aro superior del volante -->
+                    <polygon points="4.8,7.4 8.0,7.2 10.4,6.4 10.2,5.8 5.2,6.8" fill="#d2d5e0" />
+                    <polygon points="10.0,5.8 11.0,6.0 11.0,6.8 10.0,6.6" fill="#e0b294" />
+
+                    <!-- Brazo derecho animado: mano cercana en volante que baja/sube a la palanca de cambios -->
                     <g class="takumi-arm-shift">
-                        <polygon points="4.0,7.2 6.0,7.2 7.6,10.2 5.6,11.0" fill="#f5f5fa" />
-                        <polygon points="5.8,10.8 7.2,10.0 7.6,10.4 6.0,11.2" fill="#d0d4de" />
-                        <polygon points="6.0,10.4 7.6,9.8 11.8,9.4 11.2,10.5" fill="#f5f5fa" />
-                        <line x1="6.0" y1="10.4" x2="7.4" y2="9.8" stroke="#bcc2ce" stroke-width="0.35" />
-                        <!-- Mano en la palanca de cambios -->
-                        <polygon points="11.0,9.2 12.4,9.0 12.6,10.0 11.2,10.0" fill="#f0cbaf" />
-                        <line x1="11.8" y1="9.1" x2="11.8" y2="9.9" stroke="#c89b7c" stroke-width="0.3" />
+                        <polygon points="4.0,7.2 6.0,7.2 7.6,10.0 5.6,10.8" fill="#f5f5fa" />
+                        <polygon points="5.8,10.6 7.2,9.8 7.6,10.2 6.0,11.0" fill="#d0d4de" />
+                        <polygon points="6.0,10.2 7.6,9.6 10.4,8.8 10.0,9.8" fill="#f5f5fa" />
+                        <line x1="6.0" y1="10.2" x2="7.4" y2="9.6" stroke="#bcc2ce" stroke-width="0.35" />
+                        <!-- Mano en volante en posición 3 en punto -->
+                        <polygon points="9.8,8.5 10.8,8.3 11.0,9.3 10.0,9.3" fill="#f0cbaf" />
+                        <line x1="10.4" y1="8.4" x2="10.4" y2="9.2" stroke="#c89b7c" stroke-width="0.3" />
                     </g>
                 </svg>
             </div>
@@ -747,24 +771,47 @@ const jsContent = `// ==UserScript==
                         <polygon points="6.5,2.8 7.8,1.0 8.8,2.8" fill="#262832" />
                         <polygon points="8.2,2.8 9.8,1.8 9.4,4.2" fill="#1f2128" />
                         <polygon points="8.6,4.0 10.2,4.4 9.0,5.0" fill="#1f2128" />
-                        
-                        <!-- Palanca de cambios GC8 (el volante es el nativo del modelo del auto) -->
-                        <line x1="11.0" y1="12" x2="11.6" y2="9.8" stroke="#757c8c" stroke-width="0.45" stroke-linecap="round" />
-                        <circle cx="11.6" cy="9.6" r="0.55" fill="#15171e" />
-                        
-                        <!-- Brazo relajado Bunta animado: mano baja que acaricia la palanca y consola -->
+
+                        <!-- TABLERO IMPREZA GC8: curva envolvente deportiva de los 90s -->
+                        <polygon points="10.8,9.5 12.6,7.8 19,6.7 19,12 10.5,12" fill="#161820" />
+                        <line x1="12.6" y1="7.8" x2="19" y2="6.7" stroke="#363c4e" stroke-width="0.35" />
+                        <line x1="10.8" y1="9.5" x2="12.6" y2="7.8" stroke="#262a38" stroke-width="0.35" />
+
+                        <!-- Cuadro de instrumentos STI con iluminación ámbar/roja -->
+                        <polygon points="11.4,7.2 14.1,7.0 14.3,8.2 11.2,8.4" fill="#0f1116" />
+                        <line x1="11.4" y1="7.2" x2="14.1" y2="7.0" stroke="#485064" stroke-width="0.25" />
+                        <circle cx="12.3" cy="7.7" r="0.35" fill="#080a0e" />
+                        <circle cx="12.3" cy="7.7" r="0.15" fill="#ff4020" />
+                        <circle cx="13.3" cy="7.7" r="0.35" fill="#080a0e" />
+                        <circle cx="13.3" cy="7.7" r="0.15" fill="#ffb430" />
+
+                        <!-- Consola central y palanca de cambios STI -->
+                        <polygon points="8.2,10.6 11.2,10.6 11.2,12 7.8,12" fill="#1c1e28" />
+                        <line x1="9.5" y1="12" x2="10.0" y2="10.2" stroke="#848a9a" stroke-width="0.4" stroke-linecap="round" />
+                        <circle cx="10.0" cy="10.0" r="0.45" fill="#14161a" />
+
+                        <!-- Columna de dirección y Volante STI Momo colocado cerca de Bunta -->
+                        <line x1="12.0" y1="8.6" x2="10.8" y2="9.4" stroke="#202430" stroke-width="0.7" stroke-linecap="round" />
+                        <!-- Aro del volante a 72° -->
+                        <line x1="10.6" y1="6.4" x2="9.6" y2="10.5" stroke="#14161b" stroke-width="1.1" stroke-linecap="round" />
+                        <line x1="10.7" y1="6.5" x2="9.7" y2="10.4" stroke="#404658" stroke-width="0.28" />
+                        <!-- Logo STI en el centro del volante -->
+                        <circle cx="10.0" cy="8.3" r="0.5" fill="#0e1014" />
+                        <circle cx="10.0" cy="8.3" r="0.18" fill="#e02828" />
+
+                        <!-- Brazo relajado de Bunta: mano firme y tranquila en el volante -->
                         <g class="bunta-arm-shift">
-                            <polygon points="3.6,7.0 5.6,7.0 7.0,10.2 4.8,11.0" fill="#262d3e" />
-                            <polygon points="5.2,10.6 6.8,9.8 12.0,8.8 11.4,10.4 5.8,11.2" fill="#2a3246" />
-                            <line x1="10.8" y1="9.0" x2="10.4" y2="10.2" stroke="#1a202c" stroke-width="0.35" />
-                            <!-- Mano reposando baja en la consola/palanca -->
-                            <polygon points="11.2,8.8 12.8,8.6 13.0,9.8 11.5,9.8" fill="#eec5a8" />
-                            <line x1="12.2" y1="8.7" x2="12.2" y2="9.5" stroke="#c29476" stroke-width="0.3" />
+                            <polygon points="3.6,7.0 5.6,7.0 7.0,10.0 4.8,10.8" fill="#262d3e" />
+                            <polygon points="5.2,10.4 6.8,9.6 10.4,8.6 10.0,9.8 5.8,11.0" fill="#2a3246" />
+                            <line x1="9.4" y1="8.8" x2="9.0" y2="10.0" stroke="#1a202c" stroke-width="0.35" />
+                            <!-- Mano de Bunta en el volante -->
+                            <polygon points="9.8,8.4 10.8,8.2 11.0,9.2 10.0,9.2" fill="#eec5a8" />
+                            <line x1="10.4" y1="8.3" x2="10.4" y2="9.1" stroke="#c29476" stroke-width="0.3" />
                         </g>
                         <!-- Cigarrillo entre los labios de Bunta -->
-                        <line x1="8.2" y1="5.6" x2="12.2" y2="5.8" stroke="#f8f9fc" stroke-width="0.5" stroke-linecap="round" />
-                        <rect x="12.2" y="5.4" width="0.9" height="0.8" rx="0.2" fill="#ff4800" />
-                        <rect x="12.5" y="5.6" width="0.5" height="0.5" rx="0.1" fill="#fff275" />
+                        <line x1="8.2" y1="5.6" x2="11.8" y2="5.8" stroke="#f8f9fc" stroke-width="0.5" stroke-linecap="round" />
+                        <rect x="11.8" y="5.4" width="0.8" height="0.8" rx="0.2" fill="#ff4800" />
+                        <rect x="12.0" y="5.6" width="0.5" height="0.5" rx="0.1" fill="#fff275" />
                     </svg>
                 </div>
                 <img class="impreza-img" src="\${BUNTA_IMPREZA}" alt="Subaru Impreza WRX STI Type R (Bunta)" draggable="false" />
