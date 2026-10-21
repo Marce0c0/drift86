@@ -106,22 +106,31 @@
                 opacity: 1;
             }
 
-            /* Faro delantero físico en el morro del AE86 (de donde nace la luz de forma realista) */
+            /* Faro popup escamoteable icónico en el capó del AE86 (claramente visible en reproducción) */
             .ae86-headlight-lamp {
                 position: absolute;
-                right: 2px;
-                bottom: 6.8px;
-                width: 3.2px;
-                height: 2.2px;
-                background: #fffef2;
+                right: 1.2px;
+                bottom: 10.8px;
+                width: 4.8px;
+                height: 3.2px;
+                background: linear-gradient(180deg, #ffffff 50%, #fff6d0 100%);
+                border: 0.6px solid #101214;
                 border-radius: 1px;
-                box-shadow: 0 0 3px rgba(255, 252, 225, 0.9), 0 0 5px rgba(255, 240, 180, 0.5);
+                box-shadow: 
+                    0 0 2px #ffffff,
+                    0 0 6px #fff2a8,
+                    0 0 12px rgba(255, 230, 140, 0.85);
                 pointer-events: none;
                 z-index: 5;
+                animation: ae86-engine-rumble 0.22s infinite ease-in-out alternate;
                 transition: opacity 0.2s ease;
             }
             #${CAR_ID}.paused .ae86-headlight-lamp {
-                opacity: 0.15;
+                display: none;
+            }
+            #${CAR_ID}.drifting .ae86-headlight-lamp {
+                bottom: 10.2px;
+                right: 1.5px;
             }
 
             /* Proyección sutil y realista de los faros sobre el asfalto (ambos coches casi igual) */
@@ -132,7 +141,7 @@
                 width: 66px;
                 height: 16px;
                 background: radial-gradient(
-                    ellipse 85% 65% at 0% 50%,
+                    ellipse 85% 65% at 0% 55%,
                     rgba(255, 252, 235, 0.35) 0%,
                     rgba(255, 248, 220, 0.20) 35%,
                     rgba(255, 242, 200, 0.07) 65%,
@@ -803,12 +812,12 @@
             road.appendChild(svgCurve);
         }
         svgCurve.innerHTML = `
-            <path id="ae86-curve-asphalt"       stroke="#1e2025" stroke-width="18" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-stripes"       stroke="rgba(225, 230, 245, 0.58)" stroke-width="1.6" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-border-top"    stroke="rgba(235, 240, 250, 0.65)" stroke-width="1.2" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-inner-top"     stroke="rgba(225, 230, 245, 0.50)" stroke-width="1.0" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-inner-bottom"  stroke="rgba(225, 230, 245, 0.50)" stroke-width="1.0" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-border-bottom" stroke="rgba(235, 240, 250, 0.65)" stroke-width="1.2" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-asphalt"       stroke="#14161a" stroke-width="18" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-stripes"       stroke="rgba(205, 215, 230, 0.38)" stroke-width="1.6" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-border-top"    stroke="rgba(215, 225, 240, 0.44)" stroke-width="1.2" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-inner-top"     stroke="rgba(205, 215, 230, 0.32)" stroke-width="1.0" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-inner-bottom"  stroke="rgba(205, 215, 230, 0.32)" stroke-width="1.0" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-border-bottom" stroke="rgba(215, 225, 240, 0.44)" stroke-width="1.2" stroke-linecap="butt" fill="none"/>
             <path id="ae86-curve-fill"          stroke="#07090d" stroke-width="18.5" stroke-linecap="butt" fill="none" opacity="0.84"/>
         `;
 
