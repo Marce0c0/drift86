@@ -80,6 +80,7 @@ const jsContent = `// ==UserScript==
                 z-index: 100000 !important;
                 transform-origin: 50% 90%;
                 will-change: transform, left, top;
+                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
                 transition: none;
                 opacity: 1 !important;
                 visibility: visible !important;
@@ -100,7 +101,6 @@ const jsContent = `// ==UserScript==
                 opacity: 0;
                 transition: opacity 0.12s ease;
                 z-index: 2;
-                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
             }
 
             /* Vista 1: Pausa / Detenido (viendo hacia adelante en ángulo 3/4 con intermitentes ámbar activos) */
@@ -151,35 +151,32 @@ const jsContent = `// ==UserScript==
                 right: 1.2px;
             }
 
-            /* Proyección potente y luminosa de los faros sobre el asfalto (hace brillar la carretera) */
+            /* Proyección sutil y realista de los faros sobre el asfalto (ambos coches casi igual) */
             .ae86-headlight-beam {
                 position: absolute;
-                right: -123px;
-                bottom: -2px;
-                width: 125px;
-                height: 22px;
+                right: -64px;
+                bottom: -1px;
+                width: 66px;
+                height: 16px;
                 background: radial-gradient(
-                    ellipse 90% 70% at 0% 50%,
-                    rgba(255, 255, 235, 0.94) 0%,
-                    rgba(255, 250, 205, 0.78) 22%,
-                    rgba(255, 240, 175, 0.52) 50%,
-                    rgba(255, 225, 140, 0.25) 75%,
-                    rgba(255, 215, 110, 0.08) 90%,
+                    ellipse 85% 65% at 0% 55%,
+                    rgba(255, 252, 235, 0.55) 0%,
+                    rgba(255, 248, 220, 0.30) 35%,
+                    rgba(255, 242, 200, 0.10) 65%,
                     transparent 100%
                 );
                 border-radius: 0 50% 50% 0;
                 pointer-events: none;
                 mix-blend-mode: screen;
                 z-index: 3;
-                filter: blur(0.8px);
-                box-shadow: 0 0 14px 2px rgba(255, 245, 180, 0.45);
+                filter: blur(1.5px);
                 transition: opacity 0.25s ease;
             }
             #\${CAR_ID}.paused .ae86-headlight-beam {
-                opacity: 0.15;
+                opacity: 0.10;
             }
             #\${CAR_ID}.drifting .ae86-headlight-beam {
-                opacity: 0.70;
+                opacity: 0.40;
             }
 
             /* Subaru Impreza WRX STI Type R (Bunta Fujiwara Easter Egg) */
@@ -233,28 +230,25 @@ const jsContent = `// ==UserScript==
                 z-index: 5;
             }
 
-            /* Proyección potente y luminosa de los faros sobre el asfalto (Impreza) */
+            /* Proyección sutil y realista de los faros sobre el asfalto (ambos coches casi igual) */
             #\${IMPREZA_ID} .impreza-headlight-beam {
                 position: absolute;
-                right: -123px;
-                bottom: -2px;
-                width: 125px;
-                height: 22px;
+                right: -64px;
+                bottom: -1px;
+                width: 66px;
+                height: 16px;
                 background: radial-gradient(
-                    ellipse 90% 70% at 0% 50%,
-                    rgba(250, 253, 255, 0.94) 0%,
-                    rgba(235, 248, 255, 0.78) 22%,
-                    rgba(215, 240, 255, 0.52) 50%,
-                    rgba(195, 230, 255, 0.25) 75%,
-                    rgba(180, 220, 255, 0.08) 90%,
+                    ellipse 85% 65% at 0% 50%,
+                    rgba(250, 252, 255, 0.55) 0%,
+                    rgba(240, 248, 255, 0.30) 35%,
+                    rgba(225, 240, 255, 0.10) 65%,
                     transparent 100%
                 );
                 border-radius: 0 50% 50% 0;
                 pointer-events: none;
                 mix-blend-mode: screen;
                 z-index: 3;
-                filter: blur(0.8px);
-                box-shadow: 0 0 14px 2px rgba(200, 235, 255, 0.45);
+                filter: blur(1.5px);
             }
 
             /* Luces traseras rojas estacionarias (Siempre encendidas durante la animación) */
@@ -1223,10 +1217,10 @@ const jsContent = `// ==UserScript==
                     if (taillightGlow) taillightGlow.style.opacity = (lightsFade * 0.95).toFixed(2);
                     if (taillightLamp) taillightLamp.style.opacity = lightsFade.toFixed(2);
 
-                    const headlightBeam = impreza.querySelector(".impreza-headlight-beam");
+                    const headlightGlow = impreza.querySelector(".impreza-headlight-glow");
                     const headlightLamp = impreza.querySelector(".impreza-headlight-lamp");
                     const frontHeadlightOpacity = (buntaX > clampedCarX + 120 ? Math.max(0, bodyOpacity * 1.2) : 1.0) * lightsFade;
-                    if (headlightBeam) headlightBeam.style.opacity = frontHeadlightOpacity.toFixed(2);
+                    if (headlightGlow) headlightGlow.style.opacity = frontHeadlightOpacity.toFixed(2);
                     if (headlightLamp) headlightLamp.style.opacity = frontHeadlightOpacity.toFixed(2);
                 }
 
