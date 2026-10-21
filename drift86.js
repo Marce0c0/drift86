@@ -479,6 +479,54 @@
                 100% { opacity: 0;    transform: translate(-15px, -3px) scale(1.6); }
             }
 
+            /* Bocadillo de grito picudo estilo Manga japonés (Initial D "GO!") */
+            .ae86-manga-shout {
+                position: absolute;
+                left: -8px;
+                bottom: 18px;
+                width: 68px;
+                height: 42px;
+                pointer-events: none;
+                z-index: 100010 !important;
+                animation: ae86-manga-shout-pop 1.35s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+                transform-origin: 18px 37px;
+                will-change: transform, opacity;
+            }
+            .ae86-shout-svg {
+                width: 100%;
+                height: 100%;
+                overflow: visible;
+                display: block;
+                filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.45));
+            }
+            @keyframes ae86-manga-shout-pop {
+                0% {
+                    transform: scale(0) rotate(-12deg);
+                    opacity: 0;
+                }
+                14% {
+                    transform: scale(1.22) rotate(4deg);
+                    opacity: 1;
+                }
+                22% {
+                    transform: scale(0.96) rotate(-2deg);
+                    opacity: 1;
+                }
+                32% {
+                    transform: scale(1.05) rotate(1deg);
+                }
+                42% {
+                    transform: scale(1.0) rotate(0deg);
+                }
+                78% {
+                    transform: scale(1.0) translate(0, 0);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(0.4) translate(14px, -18px) rotate(6deg);
+                    opacity: 0;
+                }
+            }
 
             /* ─── Calzada de Tokio SOLO en la barra de reproducción (Seekbar) ─── */
             .playback-bar,
@@ -900,6 +948,66 @@
 
         const CAR_WIDTH = 52;
 
+        let lastGoTriggerTime = 0;
+        let lastTrackUri = null;
+        let wasPlayingForGo = false;
+        let lastKnownGoProgress = null;
+
+        function triggerGoShout() {
+            const now = performance.now();
+            if (now - lastGoTriggerTime < 1800) return;
+            lastGoTriggerTime = now;
+
+            const existing = car.querySelector(".ae86-manga-shout");
+            if (existing) existing.remove();
+
+            const shout = document.createElement("div");
+            shout.className = "ae86-manga-shout";
+            shout.innerHTML = `
+                <svg viewBox="0 0 68 42" class="ae86-shout-svg" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="ae86-go-grad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#fff444"/>
+                            <stop offset="45%" stop-color="#ff7b00"/>
+                            <stop offset="100%" stop-color="#e60000"/>
+                        </linearGradient>
+                        <filter id="ae86-shout-shadow" x="-20%" y="-20%" width="150%" height="150%">
+                            <feDropShadow dx="1.8" dy="2.2" stdDeviation="0" flood-color="#000000" flood-opacity="1"/>
+                        </filter>
+                    </defs>
+                    <!-- Nube de grito picuda estilo manga (Initial D burst balloon) con sombra plana de cómic -->
+                    <path d="M 32.0,2.4 L 37.0,9.6 L 50.5,4.1 L 45.2,12.8 L 59.2,13.2 L 48.3,18.0 L 61.9,23.3 L 45.2,23.2 L 48.8,30.6 L 37.0,26.4 L 32.0,33.6 L 27.0,26.4 L 13.5,31.9 L 18.8,23.2 L 18.0,37.0 L 15.7,18.0 L 2.1,12.7 L 18.8,12.8 L 15.2,5.4 L 27.0,9.6 Z"
+                          fill="#ffffff" stroke="#000000" stroke-width="2.2" stroke-linejoin="miter" stroke-miterlimit="4"
+                          filter="url(#ae86-shout-shadow)"/>
+                    <!-- Letras GO! con tipografía de acción anime japonesa e impacto de cómic -->
+                    <text x="34" y="21.5" text-anchor="middle"
+                          font-family="'Impact', 'Hiragino Kaku Gothic Pro', 'Meiryo', 'Arial Black', sans-serif"
+                          font-weight="900" font-style="italic" font-size="16" letter-spacing="-0.5px"
+                          fill="url(#ae86-go-grad)" stroke="#000000" stroke-width="2.8" paint-order="stroke fill"
+                          transform="rotate(-4 34 21.5)">GO!</text>
+                    <!-- Subtexto katakana japonés auténtico (ゴー！) -->
+                    <text x="34.5" y="29.0" text-anchor="middle"
+                          font-family="'Hiragino Kaku Gothic Pro', 'Meiryo', 'Yu Gothic', sans-serif"
+                          font-weight="900" font-style="italic" font-size="6.5" letter-spacing="1px"
+                          fill="#111111" stroke="#ffffff" stroke-width="0.8" paint-order="stroke fill"
+                          transform="rotate(-4 34 21.5)">ゴー！</text>
+                </svg>
+            `;
+            car.appendChild(shout);
+            setTimeout(() => {
+                if (shout.parentElement) shout.remove();
+            }, 1350);
+        }
+
+        // Event listener nativo de Spicetify para cambio de canción
+        if (typeof Spicetify?.Player?.addEventListener === "function") {
+            try {
+                Spicetify.Player.addEventListener("songchange", () => {
+                    setTimeout(triggerGoShout, 150);
+                });
+            } catch (e) {}
+        }
+
         let lastSmokeTime = 0;
         function emitSmoke(x, y, scale, parentElem) {
             const now = performance.now();
@@ -1067,6 +1175,21 @@
                 }
             }
             lastKnownProgress = progress;
+
+            // Detección de inicio de canción o reinicio ("GO!")
+            const currentTrackUri = Spicetify.Player?.data?.item?.uri || Spicetify.Player?.data?.track?.uri || null;
+            if (currentTrackUri && lastTrackUri !== null && currentTrackUri !== lastTrackUri) {
+                triggerGoShout();
+            } else if (isPlaying && lastKnownGoProgress !== null && lastKnownGoProgress > 0.12 && progress < 0.03) {
+                // Canción empezó de nuevo (loop o replay)
+                triggerGoShout();
+            } else if (isPlaying && !wasPlayingForGo && progress < 0.03) {
+                // Se dio play desde el inicio de la pista
+                triggerGoShout();
+            }
+            if (currentTrackUri) lastTrackUri = currentTrackUri;
+            lastKnownGoProgress = progress;
+            wasPlayingForGo = isPlaying;
 
             const now = performance.now();
             const isPostDrifting = now < driftEndTime;
@@ -1363,6 +1486,7 @@
 
             if (typeof finalProgress === "number" && !isNaN(finalProgress) && finalProgress >= 0 && finalProgress <= 1) {
                 lastKnownProgress = finalProgress;
+                if (finalProgress < 0.04 && isPlayerPlaying()) triggerGoShout();
                 try {
                     if (typeof Spicetify.Player.seek === "function") {
                         Spicetify.Player.seek(finalProgress);
