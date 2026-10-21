@@ -908,6 +908,8 @@
 
         // Bunta Fujiwara Impreza Overtake state
         let buntaActive = false;
+        let buntaCancelling = false;
+        let buntaCancelStartTime = 0;
         let buntaX = -80;
         let buntaYOffset = -6;
         let nextBuntaTime = performance.now() + 10 * 1000;
@@ -915,8 +917,9 @@
         let lastLoopTime = performance.now();
 
         window.__triggerBuntaOvertake = function() {
-            if (buntaActive) return;
+            if (buntaActive || isDragging) return;
             buntaActive = true;
+            buntaCancelling = false;
             buntaX = -80;
             buntaYOffset = -6;
             surpriseStartTime = 0;
@@ -1157,7 +1160,13 @@
             const clampedCarX = Math.max(halfW, Math.min(carX, w - halfW));
 
             if (buntaActive) {
-                const buntaSpeed = 260; // px / seg
+                // Si el usuario empieza a arrastrar el seekbar, Bunta se desvanece suavemente como un fantasma
+                if (isDragging && !buntaCancelling) {
+                    buntaCancelling = true;
+                    buntaCancelStartTime = now;
+                }
+
+                const buntaSpeed = buntaCancelling ? 380 : 260; // px / seg (acelera ligeramente al disolverse)
                 buntaX += buntaSpeed * dt;
 
                 // Overtake path: por el carril superior (-6px) y al rebasar se alinea hacia adelante
@@ -1167,8 +1176,8 @@
                     buntaYOffset += (-6.0 - buntaYOffset) * 0.12;
                 }
 
-                // Sobreviraje por sorpresa en el instante que Bunta se pone al lado del AE86
-                if (buntaX >= clampedCarX - 15 && surpriseStartTime === 0) {
+                // Sobreviraje por sorpresa en el instante que Bunta se pone al lado del AE86 (solo en adelantamiento normal)
+                if (!buntaCancelling && buntaX >= clampedCarX - 15 && surpriseStartTime === 0) {
                     surpriseStartTime = now;
                 }
 
@@ -1176,33 +1185,49 @@
                 let bodyOpacity = 1.0;
                 let lightsFade = 1.0;
 
-                // 1. Entrada fantasmal: surge como una sombra espectral con faros penetrantes
-                if (buntaX < clampedCarX - 10) {
-                    const entranceDist = (clampedCarX - 10) - buntaX;
-                    // Desde lejos (opacity ~0.12) hasta sólido (opacity 1.0) al emparejarse
-                    bodyOpacity = Math.max(0.12, Math.min(1.0, 1.0 - (entranceDist / 200)));
-                }
-                // 2. Desaparición en la noche: al rebasar, la carrocería se desvanece
-                // dejando solo las luces traseras rojas brillando a la distancia
-                else if (buntaX > clampedCarX + 70) {
-                    const exitDist = buntaX - (clampedCarX + 70);
-                    const exitRange = Math.max(80, (w + 40) - (clampedCarX + 70));
-                    bodyOpacity = Math.max(0.0, 1.0 - (exitDist / (exitRange * 0.55)));
-                    if (buntaX > w + 20) {
-                        lightsFade = Math.max(0, 1.0 - (buntaX - (w + 20)) / 70);
+                if (buntaCancelling) {
+                    // Desvanecimiento suave en ~350ms sin cortes bruscos
+                    const cancelProgress = Math.min(1.0, (now - buntaCancelStartTime) / 350);
+                    const cancelFactor = Math.max(0, 1.0 - cancelProgress);
+                    bodyOpacity = cancelFactor * 0.85;
+                    lightsFade = cancelFactor;
+                    if (cancelProgress >= 1.0) {
+                        buntaActive = false;
+                        buntaCancelling = false;
+                        if (impreza) impreza.style.display = "none";
+                        nextBuntaTime = now + 10 * 1000;
+                    }
+                } else {
+                    // 1. Entrada fantasmal: surge como una sombra espectral con faros penetrantes
+                    if (buntaX < clampedCarX - 10) {
+                        const entranceDist = (clampedCarX - 10) - buntaX;
+                        // Desde lejos (opacity ~0.12) hasta sólido (opacity 1.0) al emparejarse
+                        bodyOpacity = Math.max(0.12, Math.min(1.0, 1.0 - (entranceDist / 200)));
+                    }
+                    // 2. Desaparición en la noche: al rebasar, la carrocería se desvanece
+                    // dejando solo las luces traseras rojas brillando a la distancia
+                    else if (buntaX > clampedCarX + 70) {
+                        const exitDist = buntaX - (clampedCarX + 70);
+                        const exitRange = Math.max(80, (w + 40) - (clampedCarX + 70));
+                        bodyOpacity = Math.max(0.0, 1.0 - (exitDist / (exitRange * 0.55)));
+                        if (buntaX > w + 20) {
+                            lightsFade = Math.max(0, 1.0 - (buntaX - (w + 20)) / 70);
+                        }
                     }
                 }
 
-                if (impreza) {
+                if (impreza && buntaActive) {
                     impreza.style.left = (buntaX - 27) + "px";
-                    impreza.style.top = (carY - 10 + buntaYOffset) + "px";
+                    // Durante arrastre, Bunta se mantiene en el asfalto horizontal plano (baseline) en vez de trepar la curva del arco
+                    const targetBaseY = (isDragging || buntaCancelling) ? baseline : carY;
+                    impreza.style.top = (targetBaseY - 10 + buntaYOffset) + "px";
                     impreza.style.display = "block";
 
                     const bodyEl = impreza.querySelector(".impreza-body");
                     if (bodyEl) {
                         bodyEl.style.opacity = bodyOpacity.toFixed(2);
                         bodyEl.style.filter = bodyOpacity < 0.85
-                            ? "drop-shadow(0 0 6px rgba(70, 160, 255, 0.5)) blur(" + ((1 - bodyOpacity) * 1.2).toFixed(1) + "px)"
+                            ? "drop-shadow(0 0 6px rgba(70, 160, 255, 0.5)) blur(" + ((1 - bodyOpacity) * 1.5).toFixed(1) + "px)"
                             : "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7))";
                     }
 
@@ -1220,10 +1245,13 @@
                 }
 
                 // Humo de escape bóxer del Subaru
-                emitCruisingSmoke(buntaX - 27, carY + buntaYOffset + 4, currentRoad);
+                if (buntaActive) {
+                    emitCruisingSmoke(buntaX - 27, (isDragging || buntaCancelling ? baseline : carY) + buntaYOffset + 4, currentRoad);
+                }
 
                 if (buntaX > w + 90) {
                     buntaActive = false;
+                    buntaCancelling = false;
                     if (impreza) impreza.style.display = "none";
                     nextBuntaTime = now + 10 * 1000;
                 }
@@ -1361,6 +1389,7 @@
             dragProgress = null;
             velocity = 0;
             driftEndTime = performance.now() + 1500;
+            nextBuntaTime = Math.max(nextBuntaTime, performance.now() + 10 * 1000);
 
             if (typeof finalProgress === "number" && !isNaN(finalProgress) && finalProgress >= 0 && finalProgress <= 1) {
                 lastKnownProgress = finalProgress;
