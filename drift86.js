@@ -910,7 +910,7 @@
         let buntaActive = false;
         let buntaCancelling = false;
         let buntaCancelStartTime = 0;
-        let buntaStartedWhilePaused = false;
+        let buntaPassedWhilePaused = false;
         let buntaX = -80;
         let buntaYOffset = -6;
         let nextBuntaTime = performance.now() + 10 * 1000;
@@ -921,7 +921,7 @@
             if (buntaActive || isDragging) return;
             buntaActive = true;
             buntaCancelling = false;
-            buntaStartedWhilePaused = !isPlayerPlaying();
+            buntaPassedWhilePaused = false;
             buntaX = -80;
             buntaYOffset = -6;
             surpriseStartTime = 0;
@@ -1150,7 +1150,7 @@
             if (isPlaying && !isDragging && !buntaActive && now >= nextBuntaTime) {
                 buntaActive = true;
                 buntaCancelling = false;
-                buntaStartedWhilePaused = false;
+                buntaPassedWhilePaused = false;
                 buntaX = -80;
                 buntaYOffset = -6;
                 surpriseStartTime = 0;
@@ -1170,9 +1170,9 @@
                     buntaCancelStartTime = now;
                 }
 
-                // Si en algún momento está pausado mientras Bunta pasa, invalidamos el sobreviraje por sorpresa
-                if (!isPlaying) {
-                    buntaStartedWhilePaused = true;
+                // Si Bunta alcanza o rebasa al AE86 mientras está pausado, lo marcamos para que no dé latigazo al reanudar
+                if (!isPlaying && buntaX >= clampedCarX - 25) {
+                    buntaPassedWhilePaused = true;
                 }
 
                 const buntaSpeed = buntaCancelling ? 380 : 260; // px / seg (acelera ligeramente al disolverse)
@@ -1185,8 +1185,8 @@
                     buntaYOffset += (-6.0 - buntaYOffset) * 0.12;
                 }
 
-                // Sobreviraje por sorpresa: solo si el auto venía corriendo continuamente y Bunta se empareja
-                if (isPlaying && !buntaStartedWhilePaused && !buntaCancelling &&
+                // Sobreviraje por sorpresa: Bunta se empareja mientras el auto ya está en marcha
+                if (isPlaying && !buntaPassedWhilePaused && !buntaCancelling &&
                     buntaX >= clampedCarX - 15 && buntaX <= clampedCarX + 25 &&
                     surpriseStartTime === 0) {
                     surpriseStartTime = now;
@@ -1205,7 +1205,7 @@
                     if (cancelProgress >= 1.0) {
                         buntaActive = false;
                         buntaCancelling = false;
-                        buntaStartedWhilePaused = false;
+                        buntaPassedWhilePaused = false;
                         if (impreza) impreza.style.display = "none";
                         nextBuntaTime = now + 10 * 1000;
                     }
@@ -1264,7 +1264,7 @@
                 if (buntaX > w + 90) {
                     buntaActive = false;
                     buntaCancelling = false;
-                    buntaStartedWhilePaused = false;
+                    buntaPassedWhilePaused = false;
                     if (impreza) impreza.style.display = "none";
                     nextBuntaTime = now + 10 * 1000;
                 }
