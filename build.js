@@ -62,15 +62,6 @@ const jsContent = `// ==UserScript==
                 overflow: visible !important;
             }
 
-            #\${SVG_CURVE_ID} {
-                position: absolute;
-                top: 0; left: 0;
-                width: 100%; height: 100%;
-                pointer-events: none;
-                overflow: visible !important;
-                z-index: 99999 !important;
-                filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
-            }
 
             #\${CAR_ID} {
                 position: absolute;
@@ -585,19 +576,6 @@ const jsContent = `// ==UserScript==
                 display: none !important;
             }
 
-            /* Ocultar lineas planas nativas durante la curva */
-            .playback-bar.ae86-hide-native .progress-bar__slider,
-            .playback-bar.ae86-hide-native .x-progressBar-fillColor,
-            .playback-bar.ae86-hide-native .x-progressBar-background,
-            .playback-bar.ae86-hide-native .x-progressBar-progressBarBg,
-            .playback-bar.ae86-hide-native [data-testid="progress-bar"] > div:not(#\${CAR_ID}):not(#\${SVG_CURVE_ID}),
-            [data-testid="playback-progressbar"].ae86-hide-native .progress-bar__slider,
-            [data-testid="playback-progressbar"].ae86-hide-native .x-progressBar-fillColor,
-            [data-testid="playback-progressbar"].ae86-hide-native .x-progressBar-background,
-            [data-testid="playback-progressbar"].ae86-hide-native .x-progressBar-progressBarBg,
-            [data-testid="playback-progressbar"].ae86-hide-native [data-testid="progress-bar"] > div:not(#\${CAR_ID}):not(#\${SVG_CURVE_ID}) {
-                opacity: 0 !important;
-            }
 
             .player-controls__buttons {
                 will-change: transform;
@@ -876,29 +854,8 @@ const jsContent = `// ==UserScript==
         road.style.setProperty("position", "relative", "important");
         road.style.setProperty("overflow", "visible", "important");
 
-        let svgCurve = document.getElementById(SVG_CURVE_ID);
-        if (!svgCurve) {
-            svgCurve = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            svgCurve.id = SVG_CURVE_ID;
-            road.appendChild(svgCurve);
-        }
-        svgCurve.innerHTML = \`
-            <path id="ae86-curve-asphalt"       stroke="#1e2025" stroke-width="18" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-fill"          stroke="#1db954" stroke-width="18" stroke-linecap="butt" fill="none" opacity="0.45"/>
-            <path id="ae86-curve-stripes"       stroke="#ffffff" stroke-width="1.6" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-border-top"    stroke="#ffffff" stroke-width="1.2" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-inner-top"     stroke="#ffffff" stroke-width="1.0" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-inner-bottom"  stroke="#ffffff" stroke-width="1.0" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-border-bottom" stroke="#ffffff" stroke-width="1.2" stroke-linecap="butt" fill="none"/>
-        \`;
-
-        const pathAsphalt = svgCurve.querySelector("#ae86-curve-asphalt");
-        const pathFill = svgCurve.querySelector("#ae86-curve-fill");
-        const pathStripes = svgCurve.querySelector("#ae86-curve-stripes");
-        const pathBorderTop = svgCurve.querySelector("#ae86-curve-border-top");
-        const pathInnerTop = svgCurve.querySelector("#ae86-curve-inner-top");
-        const pathInnerBottom = svgCurve.querySelector("#ae86-curve-inner-bottom");
-        const pathBorderBottom = svgCurve.querySelector("#ae86-curve-border-bottom");
+        const oldCurve = document.getElementById(SVG_CURVE_ID);
+        if (oldCurve) oldCurve.remove();
 
         let car = document.getElementById(CAR_ID);
         if (!car) {
@@ -919,8 +876,6 @@ const jsContent = `// ==UserScript==
         let lastX = 0;
         let lastTime = performance.now();
         let velocity = 0;
-        let archHeight = 0;
-        let archVelocity = 0;
         let lastKnownProgress = null;
         let driftEndTime = 0;
 
@@ -1036,9 +991,6 @@ const jsContent = `// ==UserScript==
             if (impreza && impreza.parentElement !== currentRoad) {
                 currentRoad.appendChild(impreza);
             }
-            if (svgCurve.parentElement !== currentRoad) {
-                currentRoad.appendChild(svgCurve);
-            }
 
             const pControls = document.querySelector(".player-controls__right") || document.querySelector(".player-controls__buttons");
             if (pControls && (!buntaBtn || buntaBtn.parentElement !== pControls)) {
@@ -1130,7 +1082,6 @@ const jsContent = `// ==UserScript==
                     const diff = progress - lastKnownProgress;
                     if (Math.abs(diff) > 0.015 && Math.abs(diff) < 0.95) {
                         velocity = Math.sign(diff) * Math.min(2.5, Math.abs(diff) * 18);
-                        archVelocity = Math.min(12, Math.abs(diff) * 40);
                     }
                 }
             }
@@ -1140,26 +1091,8 @@ const jsContent = `// ==UserScript==
             const isPostDrifting = now < driftEndTime;
             const driftDecay = isDragging ? 1 : (isPostDrifting ? Math.max(0, (driftEndTime - now) / 1500) : 0);
 
-            if (isDragging) {
-                const absV = Math.min(Math.abs(velocity), 4);
-                const targetArch = Math.min(13, 2 + absV * 5);
-                archHeight += (targetArch - archHeight) * 0.45;
-            } else if (isPostDrifting) {
-                const targetArch = 10 * Math.pow(driftDecay, 1.4);
-                archHeight += (targetArch - archHeight) * 0.16;
-            } else {
-                const springK = 0.16;
-                const damping = 0.72;
-                archVelocity += (0 - archHeight) * springK;
-                archVelocity *= damping;
-                archHeight += archVelocity;
-                if (Math.abs(archHeight) < 0.2 && Math.abs(archVelocity) < 0.2) {
-                    archHeight = 0;
-                    archVelocity = 0;
-                }
-                velocity *= 0.75;
-                if (Math.abs(velocity) < 0.05) velocity = 0;
-            }
+            velocity *= 0.75;
+            if (Math.abs(velocity) < 0.05) velocity = 0;
 
             const dt = Math.min((now - lastLoopTime) / 1000, 0.1);
             lastLoopTime = now;
@@ -1178,7 +1111,7 @@ const jsContent = `// ==UserScript==
             const halfW = CAR_WIDTH / 2;
             const t = Math.max(0, Math.min(progress, 1));
             const carX = t * w;
-            const carY = baseline - 4 * t * (1 - t) * archHeight;
+            const carY = baseline;
             const clampedCarX = Math.max(halfW, Math.min(carX, w - halfW));
 
             if (buntaActive) {
@@ -1302,71 +1235,17 @@ const jsContent = `// ==UserScript==
             const isDriftingNow = isDragging || isPostDrifting || isSurpriseDrifting;
             car.classList.toggle("drifting", isDriftingNow);
 
-            const showCurve = isDragging || isPostDrifting || archHeight > 0.4;
-            const containerElem = currentRoad.closest('.playback-bar, [data-testid="playback-progressbar"]') || currentRoad;
-            containerElem.classList.toggle("ae86-hide-native", showCurve);
-            svgCurve.style.display = showCurve ? "block" : "none";
-
-            if (playerButtons) {
-                const lift = showCurve ? archHeight * 0.5 : 0;
-                playerButtons.style.transform = lift > 0.4 ? "translateY(-" + lift + "px)" : "none";
-            }
-
-            if (showCurve) {
-                const controlY = baseline - (archHeight * 2);
-
-                const pathCenterD = "M 0," + baseline.toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + controlY.toFixed(2) + " " + w.toFixed(2) + "," + baseline.toFixed(2);
-                const pathTopBorderD = "M 0," + (baseline - 8.2).toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + (controlY - 8.2).toFixed(2) + " " + w.toFixed(2) + "," + (baseline - 8.2).toFixed(2);
-                const pathTopInnerD = "M 0," + (baseline - 5.0).toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + (controlY - 5.0).toFixed(2) + " " + w.toFixed(2) + "," + (baseline - 5.0).toFixed(2);
-                const pathBottomInnerD = "M 0," + (baseline + 5.0).toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + (controlY + 5.0).toFixed(2) + " " + w.toFixed(2) + "," + (baseline + 5.0).toFixed(2);
-                const pathBorderBottomD = "M 0," + (baseline + 8.2).toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + (controlY + 8.2).toFixed(2) + " " + w.toFixed(2) + "," + (baseline + 8.2).toFixed(2);
-
-                if (pathAsphalt) pathAsphalt.setAttribute("d", pathCenterD);
-                if (pathFill) {
-                    pathFill.setAttribute("d", pathCenterD);
-                    const curveLen = Math.sqrt(w * w + archHeight * archHeight * 2);
-                    pathFill.style.strokeDasharray = curveLen + "";
-                    pathFill.style.strokeDashoffset = (curveLen * (1 - progress)) + "";
-                }
-                if (pathBorderTop) pathBorderTop.setAttribute("d", pathTopBorderD);
-                if (pathInnerTop) pathInnerTop.setAttribute("d", pathTopInnerD);
-                if (pathInnerBottom) pathInnerBottom.setAttribute("d", pathBottomInnerD);
-                if (pathBorderBottom) pathBorderBottom.setAttribute("d", pathBorderBottomD);
-
-                let stripesD = "";
-                const step = 8;
-                for (let x = 3; x < w - 3; x += step) {
-                    const curT = x / w;
-                    const curY = baseline - 4 * curT * (1 - curT) * archHeight;
-                    const curDy = -4 * (1 - 2 * curT) * archHeight;
-                    const len = Math.sqrt(step * step + curDy * curDy);
-                    const nx = -curDy / len;
-                    const ny = step / len;
-
-                    const xTop1 = x + nx * 8.2 - 2;
-                    const yTop1 = curY + ny * 8.2;
-                    const xTop2 = x + nx * 5.0 + 2;
-                    const yTop2 = curY + ny * 5.0;
-                    stripesD += "M " + xTop1.toFixed(1) + "," + yTop1.toFixed(1) + " L " + xTop2.toFixed(1) + "," + yTop2.toFixed(1) + " ";
-
-                    const xBot1 = x - nx * 5.0 - 2;
-                    const yBot1 = curY - ny * 5.0;
-                    const xBot2 = x - nx * 8.2 + 2;
-                    const yBot2 = curY - ny * 8.2;
-                    stripesD += "M " + xBot1.toFixed(1) + "," + yBot1.toFixed(1) + " L " + xBot2.toFixed(1) + "," + yBot2.toFixed(1) + " ";
-                }
-                if (pathStripes) pathStripes.setAttribute("d", stripesD);
-            }
-
-            const tangentDy = -4 * (1 - 2 * t) * archHeight;
-            const curveAngle = Math.atan2(tangentDy, w) * (180 / Math.PI);
-            const totalAngle = isDriftingNow ? (curveAngle * Math.min(1, driftDecay * 1.3)) : 0;
+            // Ángulo dinámico de derrape por velocidad de arrastre horizontal y contravolante (en pista plana)
+            const driftAngle = isDragging
+                ? Math.max(-16, Math.min(16, -velocity * 4.5))
+                : (isPostDrifting ? Math.max(-10, Math.min(10, -velocity * 2.5 * driftDecay)) : 0);
+            const totalAngle = isDriftingNow ? driftAngle : 0;
 
             const bounce = isDriftingNow 
-                ? (Math.sin(now * 0.045) * 1.5 + Math.sin(now * 0.11) * 0.8) * Math.min(1, driftDecay * 1.3)
+                ? (Math.sin(now * 0.045) * 1.2 + Math.sin(now * 0.11) * 0.6) * Math.min(1, driftDecay * 1.3)
                 : 0;
             const dynamicRoll = isDriftingNow
-                ? (Math.sin(now * 0.038) * 1.2) * Math.min(1, driftDecay)
+                ? (Math.sin(now * 0.038) * 1.0) * Math.min(1, driftDecay)
                 : 0;
 
             car.style.left = (clampedCarX - halfW) + "px";
