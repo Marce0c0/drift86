@@ -124,20 +124,20 @@ const jsContent = `// ==UserScript==
                 opacity: 1;
             }
 
-            /* Faro popup escamoteable icónico en el capó del AE86 (claramente visible en reproducción) */
+            /* Faro popup escamoteable icónico en el capó del AE86 (lente halógeno realista y pulido) */
             .ae86-headlight-lamp {
                 position: absolute;
                 right: 1.2px;
-                bottom: 10.8px;
-                width: 4.8px;
-                height: 3.2px;
-                background: linear-gradient(180deg, #ffffff 50%, #fff6d0 100%);
-                border: 0.6px solid #101214;
+                bottom: 11.2px;
+                width: 2.2px;
+                height: 1.8px;
+                background: #fffef5;
                 border-radius: 1px;
+                border: none;
                 box-shadow: 
-                    0 0 2px #ffffff,
-                    0 0 6px #fff2a8,
-                    0 0 12px rgba(255, 230, 140, 0.85);
+                    0 0 1.5px #ffffff,
+                    1px 0 4px rgba(255, 248, 215, 0.95),
+                    2px 0 8px rgba(255, 225, 140, 0.45);
                 pointer-events: none;
                 z-index: 5;
                 animation: ae86-engine-rumble 0.22s infinite ease-in-out alternate;
@@ -147,8 +147,8 @@ const jsContent = `// ==UserScript==
                 display: none;
             }
             #\${CAR_ID}.drifting .ae86-headlight-lamp {
-                bottom: 10.2px;
-                right: 1.5px;
+                bottom: 10.4px;
+                right: 1.2px;
             }
 
             /* Proyección sutil y realista de los faros sobre el asfalto (ambos coches casi igual) */
