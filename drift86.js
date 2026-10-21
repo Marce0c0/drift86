@@ -910,6 +910,7 @@
         let buntaActive = false;
         let buntaCancelling = false;
         let buntaCancelStartTime = 0;
+        let buntaStartedWhilePaused = false;
         let buntaX = -80;
         let buntaYOffset = -6;
         let nextBuntaTime = performance.now() + 10 * 1000;
@@ -920,6 +921,7 @@
             if (buntaActive || isDragging) return;
             buntaActive = true;
             buntaCancelling = false;
+            buntaStartedWhilePaused = !isPlayerPlaying();
             buntaX = -80;
             buntaYOffset = -6;
             surpriseStartTime = 0;
@@ -1147,6 +1149,8 @@
             // ─── Lógica del adelantamiento de Bunta (Subaru Impreza GC8) ───
             if (isPlaying && !isDragging && !buntaActive && now >= nextBuntaTime) {
                 buntaActive = true;
+                buntaCancelling = false;
+                buntaStartedWhilePaused = false;
                 buntaX = -80;
                 buntaYOffset = -6;
                 surpriseStartTime = 0;
@@ -1166,6 +1170,11 @@
                     buntaCancelStartTime = now;
                 }
 
+                // Si en algún momento está pausado mientras Bunta pasa, invalidamos el sobreviraje por sorpresa
+                if (!isPlaying) {
+                    buntaStartedWhilePaused = true;
+                }
+
                 const buntaSpeed = buntaCancelling ? 380 : 260; // px / seg (acelera ligeramente al disolverse)
                 buntaX += buntaSpeed * dt;
 
@@ -1176,8 +1185,10 @@
                     buntaYOffset += (-6.0 - buntaYOffset) * 0.12;
                 }
 
-                // Sobreviraje por sorpresa en el instante que Bunta se pone al lado del AE86 (solo en marcha)
-                if (isPlaying && !buntaCancelling && buntaX >= clampedCarX - 15 && surpriseStartTime === 0) {
+                // Sobreviraje por sorpresa: solo si el auto venía corriendo continuamente y Bunta se empareja
+                if (isPlaying && !buntaStartedWhilePaused && !buntaCancelling &&
+                    buntaX >= clampedCarX - 15 && buntaX <= clampedCarX + 25 &&
+                    surpriseStartTime === 0) {
                     surpriseStartTime = now;
                 }
 
@@ -1194,6 +1205,7 @@
                     if (cancelProgress >= 1.0) {
                         buntaActive = false;
                         buntaCancelling = false;
+                        buntaStartedWhilePaused = false;
                         if (impreza) impreza.style.display = "none";
                         nextBuntaTime = now + 10 * 1000;
                     }
@@ -1252,6 +1264,7 @@
                 if (buntaX > w + 90) {
                     buntaActive = false;
                     buntaCancelling = false;
+                    buntaStartedWhilePaused = false;
                     if (impreza) impreza.style.display = "none";
                     nextBuntaTime = now + 10 * 1000;
                 }
