@@ -114,9 +114,6 @@ const jsContent = `// ==UserScript==
                 bottom: 2.8px;
                 animation: ae86-engine-rumble 0.22s infinite ease-in-out alternate;
             }
-            #\${CAR_ID}.driving:not(.drifting) .ae86-headlight-glow {
-                bottom: 4.8px;
-            }
             @keyframes ae86-engine-rumble {
                 0%   { transform: translateY(0px); }
                 100% { transform: translateY(-0.4px); }
@@ -127,80 +124,50 @@ const jsContent = `// ==UserScript==
                 opacity: 1;
             }
 
-            /* Haz de luz de faros escamoteables del AE86 (cálido, atmosférico, no exagerado) */
-            .ae86-headlight-glow {
+            /* Faro delantero físico en el morro del AE86 (de donde nace la luz de forma realista) */
+            .ae86-headlight-lamp {
                 position: absolute;
-                bottom: 2px;
-                right: -13px;
-                width: 22px;
-                height: 11px;
-                background: radial-gradient(
-                    ellipse at 0% 50%,
-                    rgba(255, 252, 215, 0.42) 0%,
-                    rgba(255, 235, 140, 0.18) 50%,
-                    transparent 85%
-                );
+                right: 2px;
+                bottom: 6.8px;
+                width: 3.2px;
+                height: 2.2px;
+                background: #fffef2;
+                border-radius: 1px;
+                box-shadow: 0 0 3px rgba(255, 252, 225, 0.9), 0 0 5px rgba(255, 240, 180, 0.5);
                 pointer-events: none;
-                z-index: 4;
-                filter: drop-shadow(0 0 3px rgba(255, 240, 160, 0.45));
+                z-index: 5;
                 transition: opacity 0.2s ease;
             }
-            #\${CAR_ID}.paused .ae86-headlight-glow {
-                opacity: 0.2;
-                right: -8px;
-            }
-            #\${CAR_ID}.drifting .ae86-headlight-glow {
-                opacity: 0.35;
-                right: -10px;
+            #\${CAR_ID}.paused .ae86-headlight-lamp {
+                opacity: 0.15;
             }
 
-            /* Haz de luz de largo alcance sobre la calzada (Zona 2: iluminado lo que apunta el AE86 con sus faros) */
+            /* Proyección sutil y realista de los faros sobre el asfalto (ambos coches casi igual) */
             .ae86-headlight-beam {
                 position: absolute;
-                top: 50%;
-                left: 42px;
-                transform: translateY(-50%);
-                width: 125px;
-                height: 22px;
-                background: linear-gradient(
-                    90deg,
-                    rgba(255, 255, 230, 0.94) 0%,
-                    rgba(255, 246, 185, 0.78) 22%,
-                    rgba(255, 232, 140, 0.48) 52%,
-                    rgba(255, 215, 110, 0.18) 78%,
+                right: -64px;
+                bottom: -1px;
+                width: 66px;
+                height: 16px;
+                background: radial-gradient(
+                    ellipse 85% 65% at 0% 50%,
+                    rgba(255, 252, 235, 0.35) 0%,
+                    rgba(255, 248, 220, 0.20) 35%,
+                    rgba(255, 242, 200, 0.07) 65%,
                     transparent 100%
                 );
-                clip-path: polygon(0% 25%, 100% 0%, 100% 100%, 0% 75%);
+                border-radius: 0 50% 50% 0;
                 pointer-events: none;
                 mix-blend-mode: screen;
                 z-index: 3;
-                filter: blur(1.5px) drop-shadow(0 0 6px rgba(255, 240, 160, 0.65));
+                filter: blur(1.5px);
                 transition: opacity 0.25s ease;
             }
             #\${CAR_ID}.paused .ae86-headlight-beam {
-                opacity: 0.20;
+                opacity: 0.10;
             }
             #\${CAR_ID}.drifting .ae86-headlight-beam {
-                opacity: 0.95;
-            }
-
-            /* Luz trasera carmesí tenue que proyecta hacia la oscuridad de atrás */
-            .ae86-taillight-glow {
-                position: absolute;
-                bottom: 3.5px;
-                left: -10px;
-                width: 16px;
-                height: 9px;
-                background: radial-gradient(
-                    ellipse at right center,
-                    rgba(255, 30, 30, 0.75) 0%,
-                    rgba(255, 0, 0, 0.3) 45%,
-                    transparent 75%
-                );
-                border-radius: 50%;
-                pointer-events: none;
-                filter: blur(1px);
-                z-index: 4;
+                opacity: 0.40;
             }
 
             /* Subaru Impreza WRX STI Type R (Bunta Fujiwara Easter Egg) */
@@ -240,58 +207,39 @@ const jsContent = `// ==UserScript==
                 z-index: 2;
             }
 
-            /* Faros delanteros xenón/HID (Siempre encendidos durante la animación) */
+            /* Faros delanteros en el morro del Impreza (de donde nace la luz de forma realista) */
             #\${IMPREZA_ID} .impreza-headlight-lamp {
                 position: absolute;
                 right: 2px;
                 bottom: 6.8px;
-                width: 3.5px;
-                height: 2.6px;
-                background: #e8f5ff;
+                width: 3.2px;
+                height: 2.2px;
+                background: #fdfefe;
                 border-radius: 1px;
-                box-shadow: 0 0 3px #a0d8ff, 0 0 6px rgba(120, 205, 255, 0.95);
+                box-shadow: 0 0 3px rgba(240, 248, 255, 0.9), 0 0 5px rgba(200, 230, 255, 0.5);
                 pointer-events: none;
                 z-index: 5;
             }
 
-            #\${IMPREZA_ID} .impreza-headlight-glow {
-                position: absolute;
-                bottom: 3.5px;
-                right: -16px;
-                width: 26px;
-                height: 12px;
-                background: radial-gradient(
-                    ellipse at left center,
-                    rgba(180, 230, 255, 0.9) 0%,
-                    rgba(80, 175, 255, 0.4) 40%,
-                    transparent 75%
-                );
-                border-radius: 50%;
-                pointer-events: none;
-                filter: blur(1px);
-                z-index: 4;
-            }
-
+            /* Proyección sutil y realista de los faros sobre el asfalto (ambos coches casi igual) */
             #\${IMPREZA_ID} .impreza-headlight-beam {
                 position: absolute;
-                top: 50%;
-                left: 48px;
-                transform: translateY(-50%);
-                width: 135px;
-                height: 22px;
-                background: linear-gradient(
-                    90deg,
-                    rgba(210, 240, 255, 0.92) 0%,
-                    rgba(145, 215, 255, 0.65) 25%,
-                    rgba(85, 175, 255, 0.35) 55%,
-                    rgba(40, 130, 255, 0.12) 80%,
+                right: -64px;
+                bottom: -1px;
+                width: 66px;
+                height: 16px;
+                background: radial-gradient(
+                    ellipse 85% 65% at 0% 50%,
+                    rgba(250, 252, 255, 0.35) 0%,
+                    rgba(240, 248, 255, 0.20) 35%,
+                    rgba(225, 240, 255, 0.07) 65%,
                     transparent 100%
                 );
-                clip-path: polygon(0% 25%, 100% 0%, 100% 100%, 0% 75%);
+                border-radius: 0 50% 50% 0;
                 pointer-events: none;
                 mix-blend-mode: screen;
                 z-index: 3;
-                filter: blur(1.5px) drop-shadow(0 0 7px rgba(120, 205, 255, 0.75));
+                filter: blur(1.5px);
             }
 
             /* Luces traseras rojas estacionarias (Siempre encendidas durante la animación) */
@@ -819,9 +767,8 @@ const jsContent = `// ==UserScript==
             <img class="ae86-img ae86-idle" src="\${AE86_IDLE}" alt="AE86 Pausa (3/4 frontal)" draggable="false" />
             <img class="ae86-img ae86-drive" src="\${AE86_DRIVE}" alt="AE86 Corriendo (Lateral)" draggable="false" />
             <img class="ae86-img ae86-drift" src="\${AE86_DRIFT}" alt="AE86 Derrape" draggable="false" />
-            <div class="ae86-headlight-glow"></div>
+            <div class="ae86-headlight-lamp"></div>
             <div class="ae86-headlight-beam"></div>
-            <div class="ae86-taillight-glow"></div>
             <div class="ae86-hazard ae86-hazard-front-right"></div>
             <div class="ae86-hazard ae86-hazard-front-left"></div>
             <div class="ae86-hazard ae86-hazard-side-left"></div>
@@ -912,10 +859,8 @@ const jsContent = `// ==UserScript==
                 </div>
             </div>
             <div class="impreza-headlight-lamp"></div>
-            <div class="impreza-headlight-glow"></div>
             <div class="impreza-headlight-beam"></div>
             <div class="impreza-taillight-lamp"></div>
-            <div class="impreza-taillight-glow"></div>
         \`;
         return wrapper;
     }
