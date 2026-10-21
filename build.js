@@ -68,7 +68,7 @@ const jsContent = `// ==UserScript==
                 width: 100%; height: 100%;
                 pointer-events: none;
                 overflow: visible !important;
-                z-index: 99999 !important;
+                z-index: 99990 !important;
                 filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
             }
 
@@ -514,116 +514,27 @@ const jsContent = `// ==UserScript==
                 margin: 0 !important;
             }
 
-            /* Calzada de asfalto japonés de Tokio con arcenes de franjas diagonales blancas (Shutoko / C1) */
-            .playback-bar .x-progressBar-background,
-            .playback-bar .x-progressBar-progressBarBg,
-            .playback-bar [data-testid="progress-bar"] > div:first-child,
-            [data-testid="playback-progressbar"] .x-progressBar-background,
-            [data-testid="playback-progressbar"] .x-progressBar-progressBarBg,
-            [data-testid="playback-progressbar"] [data-testid="progress-bar"] > div:first-child {
-                position: relative !important;
-                top: 0 !important;
-                left: 0 !important;
-                transform: none !important;
-                box-sizing: border-box !important;
-                background-color: #1e2025 !important;
-                background-image: 
-                    repeating-linear-gradient(
-                        -50deg,
-                        rgba(225, 230, 245, 0.58) 0px,
-                        rgba(225, 230, 245, 0.58) 2px,
-                        transparent 2px,
-                        transparent 8px
-                    ),
-                    linear-gradient(rgba(235, 240, 250, 0.65), rgba(235, 240, 250, 0.65)),
-                    linear-gradient(rgba(235, 240, 250, 0.65), rgba(235, 240, 250, 0.65)),
-                    repeating-linear-gradient(
-                        50deg,
-                        rgba(225, 230, 245, 0.58) 0px,
-                        rgba(225, 230, 245, 0.58) 2px,
-                        transparent 2px,
-                        transparent 8px
-                    ) !important;
-                background-size: 
-                    100% 3px,
-                    100% 1px,
-                    100% 1px,
-                    100% 3px !important;
-                background-position: 
-                    left top 0px,
-                    left top 3px,
-                    left bottom 3px,
-                    left bottom 0px !important;
-                background-repeat: repeat-x !important;
-                height: 18px !important;
-                border-radius: 3px !important;
-                border-top: 1.2px solid rgba(235, 240, 250, 0.65) !important;
-                border-bottom: 1.2px solid rgba(235, 240, 250, 0.65) !important;
-                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9), 0 2px 6px rgba(0, 0, 0, 0.7) !important;
-                overflow: hidden !important;
-                transition: none !important;
-            }
-
-            .playback-bar:hover .x-progressBar-background,
-            .playback-bar:active .x-progressBar-background,
-            .playback-bar:hover .x-progressBar-progressBarBg,
-            .playback-bar:active .x-progressBar-progressBarBg,
-            [data-testid="playback-progressbar"]:hover .x-progressBar-background,
-            [data-testid="playback-progressbar"]:active .x-progressBar-background,
-            [data-testid="playback-progressbar"]:hover .x-progressBar-progressBarBg,
-            [data-testid="playback-progressbar"]:active .x-progressBar-progressBarBg,
-            .playback-bar [class*="is-dragging"] .x-progressBar-background,
-            .playback-bar [class*="is-dragging"] .x-progressBar-progressBarBg,
-            [data-testid="playback-progressbar"] [class*="is-dragging"] .x-progressBar-background,
-            [data-testid="playback-progressbar"] [class*="is-dragging"] .x-progressBar-progressBarBg {
-                height: 18px !important;
-                background-color: #1e2025 !important;
-            }
-
-            /* Carretera recorrida detrás del AE86: sumida y difuminada en la noche profunda */
-            .playback-bar .x-progressBar-fillColor,
-            [data-testid="playback-progressbar"] .x-progressBar-fillColor {
-                background: linear-gradient(
-                    90deg,
-                    rgba(6, 7, 10, 0.90) 0%,
-                    rgba(8, 10, 14, 0.85) 75%,
-                    rgba(14, 12, 16, 0.75) 92%,
-                    rgba(40, 14, 18, 0.45) 97%,
-                    rgba(255, 30, 30, 0.20) 100%
-                ) !important;
-                height: 100% !important;
-                border-radius: 0px !important;
-                border-right: none !important;
-                box-shadow: none !important;
-                backdrop-filter: blur(0.5px) !important;
-            }
-
-            /* Ocultar el cursor/thumb circular de Spotify SOLO en la barra de reproducción */
+            /* Ocultar elementos nativos planos de Spotify para que la carretera Touge Initial D esté activa permanentemente */
             .playback-bar .progress-bar__slider,
             .playback-bar:hover .progress-bar__slider,
             [data-testid="playback-progressbar"] .progress-bar__slider,
             [data-testid="playback-progressbar"]:hover .progress-bar__slider,
             .playback-bar [class*="is-dragging"] .progress-bar__slider,
-            [data-testid="playback-progressbar"] [class*="is-dragging"] .progress-bar__slider {
+            [data-testid="playback-progressbar"] [class*="is-dragging"] .progress-bar__slider,
+            .playback-bar .x-progressBar-fillColor,
+            .playback-bar .x-progressBar-background,
+            .playback-bar .x-progressBar-progressBarBg,
+            .playback-bar [data-testid="progress-bar"] > div:not(#\${CAR_ID}):not(#\${SVG_CURVE_ID}):not(#\${IMPREZA_ID}),
+            [data-testid="playback-progressbar"] .x-progressBar-fillColor,
+            [data-testid="playback-progressbar"] .x-progressBar-background,
+            [data-testid="playback-progressbar"] .x-progressBar-progressBarBg,
+            [data-testid="playback-progressbar"] [data-testid="progress-bar"] > div:not(#\${CAR_ID}):not(#\${SVG_CURVE_ID}):not(#\${IMPREZA_ID}) {
                 opacity: 0 !important;
-                width: 0 !important;
-                height: 0 !important;
+                background: transparent !important;
+                background-image: none !important;
+                border: none !important;
+                box-shadow: none !important;
                 pointer-events: none !important;
-                display: none !important;
-            }
-
-            /* Ocultar lineas planas nativas durante la curva */
-            .playback-bar.ae86-hide-native .progress-bar__slider,
-            .playback-bar.ae86-hide-native .x-progressBar-fillColor,
-            .playback-bar.ae86-hide-native .x-progressBar-background,
-            .playback-bar.ae86-hide-native .x-progressBar-progressBarBg,
-            .playback-bar.ae86-hide-native [data-testid="progress-bar"] > div:not(#\${CAR_ID}):not(#\${SVG_CURVE_ID}),
-            [data-testid="playback-progressbar"].ae86-hide-native .progress-bar__slider,
-            [data-testid="playback-progressbar"].ae86-hide-native .x-progressBar-fillColor,
-            [data-testid="playback-progressbar"].ae86-hide-native .x-progressBar-background,
-            [data-testid="playback-progressbar"].ae86-hide-native .x-progressBar-progressBarBg,
-            [data-testid="playback-progressbar"].ae86-hide-native [data-testid="progress-bar"] > div:not(#\${CAR_ID}):not(#\${SVG_CURVE_ID}) {
-                opacity: 0 !important;
             }
 
             .player-controls__buttons {
@@ -950,6 +861,9 @@ const jsContent = `// ==UserScript==
         let archVelocity = 0;
         let lastKnownProgress = null;
         let driftEndTime = 0;
+        let lastRoadWidth = 0;
+        let lastRoadBaseline = 0;
+        let lastArchState = -1;
 
         // Bunta Fujiwara Impreza Overtake state
         let buntaActive = false;
@@ -1329,17 +1243,22 @@ const jsContent = `// ==UserScript==
             const isDriftingNow = isDragging || isPostDrifting || isSurpriseDrifting;
             car.classList.toggle("drifting", isDriftingNow);
 
-            const showCurve = isDragging || isPostDrifting || archHeight > 0.4;
-            const containerElem = currentRoad.closest('.playback-bar, [data-testid="playback-progressbar"]') || currentRoad;
-            containerElem.classList.toggle("ae86-hide-native", showCurve);
-            svgCurve.style.display = showCurve ? "block" : "none";
+            // La carretera Touge Initial D está permanentemente activa (tanto recta como en curva)
+            svgCurve.style.display = "block";
 
             if (playerButtons) {
-                const lift = showCurve ? archHeight * 0.5 : 0;
+                const lift = archHeight * 0.5;
                 playerButtons.style.transform = lift > 0.4 ? "translateY(-" + lift + "px)" : "none";
             }
 
-            if (showCurve) {
+            const isCurveActive = archHeight > 0.05;
+            const needsGeometryUpdate = isCurveActive || lastRoadWidth !== w || lastRoadBaseline !== baseline || lastArchState !== 0;
+
+            if (needsGeometryUpdate) {
+                lastRoadWidth = w;
+                lastRoadBaseline = baseline;
+                lastArchState = isCurveActive ? archHeight : 0;
+
                 const controlY = baseline - (archHeight * 2);
 
                 const pathCenterD = "M 0," + baseline.toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + controlY.toFixed(2) + " " + w.toFixed(2) + "," + baseline.toFixed(2);
@@ -1349,12 +1268,7 @@ const jsContent = `// ==UserScript==
                 const pathBorderBottomD = "M 0," + (baseline + 8.2).toFixed(2) + " Q " + (w / 2).toFixed(2) + "," + (controlY + 8.2).toFixed(2) + " " + w.toFixed(2) + "," + (baseline + 8.2).toFixed(2);
 
                 if (pathAsphalt) pathAsphalt.setAttribute("d", pathCenterD);
-                if (pathFill) {
-                    pathFill.setAttribute("d", pathCenterD);
-                    const curveLen = Math.sqrt(w * w + archHeight * archHeight * 2);
-                    pathFill.style.strokeDasharray = curveLen + "";
-                    pathFill.style.strokeDashoffset = (curveLen * (1 - progress)) + "";
-                }
+                if (pathFill) pathFill.setAttribute("d", pathCenterD);
                 if (pathBorderTop) pathBorderTop.setAttribute("d", pathTopBorderD);
                 if (pathInnerTop) pathInnerTop.setAttribute("d", pathTopInnerD);
                 if (pathInnerBottom) pathInnerBottom.setAttribute("d", pathBottomInnerD);
@@ -1383,6 +1297,13 @@ const jsContent = `// ==UserScript==
                     stripesD += "M " + xBot1.toFixed(1) + "," + yBot1.toFixed(1) + " L " + xBot2.toFixed(1) + "," + yBot2.toFixed(1) + " ";
                 }
                 if (pathStripes) pathStripes.setAttribute("d", stripesD);
+            }
+
+            // La sombra oscura de la noche detrás del AE86 siempre sigue la posición del coche en tiempo real
+            if (pathFill) {
+                const curveLen = Math.sqrt(w * w + archHeight * archHeight * 2);
+                pathFill.style.strokeDasharray = curveLen + "";
+                pathFill.style.strokeDashoffset = (curveLen * (1 - progress)) + "";
             }
 
             const tangentDy = -4 * (1 - 2 * t) * archHeight;
