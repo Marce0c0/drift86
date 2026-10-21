@@ -1194,8 +1194,8 @@ const jsContent = `// ==UserScript==
                     buntaYOffset += (-6.0 - buntaYOffset) * 0.12;
                 }
 
-                // Sobreviraje por sorpresa en el instante que Bunta se pone al lado del AE86 (solo en adelantamiento normal)
-                if (!buntaCancelling && buntaX >= clampedCarX - 15 && surpriseStartTime === 0) {
+                // Sobreviraje por sorpresa en el instante que Bunta se pone al lado del AE86 (solo en marcha)
+                if (isPlaying && !buntaCancelling && buntaX >= clampedCarX - 15 && surpriseStartTime === 0) {
                     surpriseStartTime = now;
                 }
 
@@ -1279,9 +1279,9 @@ const jsContent = `// ==UserScript==
                 }
             }
 
-            // Física de reacción del AE86: sobreviraje y oscilación de volante por la sorpresa
-            const surpriseElapsed = surpriseStartTime > 0 ? (now - surpriseStartTime) / 1000 : 999;
-            const isSurprised = surpriseElapsed < 1.3;
+            // Física de reacción del AE86: sobreviraje y oscilación de volante por la sorpresa (solo en marcha)
+            const surpriseElapsed = (isPlaying && surpriseStartTime > 0) ? (now - surpriseStartTime) / 1000 : 999;
+            const isSurprised = isPlaying && surpriseElapsed < 1.3;
             const surpriseDecay = isSurprised ? Math.max(0, 1 - surpriseElapsed / 1.3) : 0;
             const surpriseWobble = isSurprised ? Math.sin(surpriseElapsed * 24) * 8.5 * Math.pow(surpriseDecay, 1.2) : 0;
             const isSurpriseDrifting = isSurprised && surpriseElapsed < 0.65;
