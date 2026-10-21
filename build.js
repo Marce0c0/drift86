@@ -154,6 +154,55 @@ const jsContent = `// ==UserScript==
                 right: -10px;
             }
 
+            /* Haz de luz de largo alcance sobre la calzada (Zona 2: iluminado lo que apunta el AE86 con sus faros) */
+            .ae86-headlight-beam {
+                position: absolute;
+                top: 50%;
+                left: 42px;
+                transform: translateY(-50%);
+                width: 125px;
+                height: 22px;
+                background: linear-gradient(
+                    90deg,
+                    rgba(255, 255, 230, 0.94) 0%,
+                    rgba(255, 246, 185, 0.78) 22%,
+                    rgba(255, 232, 140, 0.48) 52%,
+                    rgba(255, 215, 110, 0.18) 78%,
+                    transparent 100%
+                );
+                clip-path: polygon(0% 25%, 100% 0%, 100% 100%, 0% 75%);
+                pointer-events: none;
+                mix-blend-mode: screen;
+                z-index: 3;
+                filter: blur(1.5px) drop-shadow(0 0 6px rgba(255, 240, 160, 0.65));
+                transition: opacity 0.25s ease;
+            }
+            #\${CAR_ID}.paused .ae86-headlight-beam {
+                opacity: 0.20;
+            }
+            #\${CAR_ID}.drifting .ae86-headlight-beam {
+                opacity: 0.95;
+            }
+
+            /* Luz trasera carmesí tenue que proyecta hacia la oscuridad de atrás */
+            .ae86-taillight-glow {
+                position: absolute;
+                bottom: 3.5px;
+                left: -10px;
+                width: 16px;
+                height: 9px;
+                background: radial-gradient(
+                    ellipse at right center,
+                    rgba(255, 30, 30, 0.75) 0%,
+                    rgba(255, 0, 0, 0.3) 45%,
+                    transparent 75%
+                );
+                border-radius: 50%;
+                pointer-events: none;
+                filter: blur(1px);
+                z-index: 4;
+            }
+
             /* Subaru Impreza WRX STI Type R (Bunta Fujiwara Easter Egg) */
             #\${IMPREZA_ID} {
                 position: absolute;
@@ -221,6 +270,28 @@ const jsContent = `// ==UserScript==
                 pointer-events: none;
                 filter: blur(1px);
                 z-index: 4;
+            }
+
+            #\${IMPREZA_ID} .impreza-headlight-beam {
+                position: absolute;
+                top: 50%;
+                left: 48px;
+                transform: translateY(-50%);
+                width: 135px;
+                height: 22px;
+                background: linear-gradient(
+                    90deg,
+                    rgba(210, 240, 255, 0.92) 0%,
+                    rgba(145, 215, 255, 0.65) 25%,
+                    rgba(85, 175, 255, 0.35) 55%,
+                    rgba(40, 130, 255, 0.12) 80%,
+                    transparent 100%
+                );
+                clip-path: polygon(0% 25%, 100% 0%, 100% 100%, 0% 75%);
+                pointer-events: none;
+                mix-blend-mode: screen;
+                z-index: 3;
+                filter: blur(1.5px) drop-shadow(0 0 7px rgba(120, 205, 255, 0.75));
             }
 
             /* Luces traseras rojas estacionarias (Siempre encendidas durante la animación) */
@@ -511,17 +582,17 @@ const jsContent = `// ==UserScript==
                 background-image: 
                     repeating-linear-gradient(
                         -50deg,
-                        #ffffff 0px,
-                        #ffffff 2px,
+                        rgba(225, 230, 245, 0.58) 0px,
+                        rgba(225, 230, 245, 0.58) 2px,
                         transparent 2px,
                         transparent 8px
                     ),
-                    linear-gradient(#ffffff, #ffffff),
-                    linear-gradient(#ffffff, #ffffff),
+                    linear-gradient(rgba(235, 240, 250, 0.65), rgba(235, 240, 250, 0.65)),
+                    linear-gradient(rgba(235, 240, 250, 0.65), rgba(235, 240, 250, 0.65)),
                     repeating-linear-gradient(
                         50deg,
-                        #ffffff 0px,
-                        #ffffff 2px,
+                        rgba(225, 230, 245, 0.58) 0px,
+                        rgba(225, 230, 245, 0.58) 2px,
                         transparent 2px,
                         transparent 8px
                     ) !important;
@@ -538,8 +609,8 @@ const jsContent = `// ==UserScript==
                 background-repeat: repeat-x !important;
                 height: 18px !important;
                 border-radius: 3px !important;
-                border-top: 1.2px solid #ffffff !important;
-                border-bottom: 1.2px solid #ffffff !important;
+                border-top: 1.2px solid rgba(235, 240, 250, 0.65) !important;
+                border-bottom: 1.2px solid rgba(235, 240, 250, 0.65) !important;
                 box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9), 0 2px 6px rgba(0, 0, 0, 0.7) !important;
                 overflow: hidden !important;
                 transition: none !important;
@@ -561,14 +632,22 @@ const jsContent = `// ==UserScript==
                 background-color: #1e2025 !important;
             }
 
-            /* Progreso iluminado SOLO en la barra de reproducción */
+            /* Carretera recorrida detrás del AE86: sumida y difuminada en la noche profunda */
             .playback-bar .x-progressBar-fillColor,
             [data-testid="playback-progressbar"] .x-progressBar-fillColor {
-                background: linear-gradient(90deg, rgba(29, 185, 84, 0.25) 0%, rgba(29, 185, 84, 0.55) 100%) !important;
+                background: linear-gradient(
+                    90deg,
+                    rgba(6, 7, 10, 0.90) 0%,
+                    rgba(8, 10, 14, 0.85) 75%,
+                    rgba(14, 12, 16, 0.75) 92%,
+                    rgba(40, 14, 18, 0.45) 97%,
+                    rgba(255, 30, 30, 0.20) 100%
+                ) !important;
                 height: 100% !important;
                 border-radius: 0px !important;
-                border-right: 2px solid #2ecc71 !important;
-                box-shadow: 0 0 10px rgba(46, 204, 113, 0.6) !important;
+                border-right: none !important;
+                box-shadow: none !important;
+                backdrop-filter: blur(0.5px) !important;
             }
 
             /* Ocultar el cursor/thumb circular de Spotify SOLO en la barra de reproducción */
@@ -741,6 +820,8 @@ const jsContent = `// ==UserScript==
             <img class="ae86-img ae86-drive" src="\${AE86_DRIVE}" alt="AE86 Corriendo (Lateral)" draggable="false" />
             <img class="ae86-img ae86-drift" src="\${AE86_DRIFT}" alt="AE86 Derrape" draggable="false" />
             <div class="ae86-headlight-glow"></div>
+            <div class="ae86-headlight-beam"></div>
+            <div class="ae86-taillight-glow"></div>
             <div class="ae86-hazard ae86-hazard-front-right"></div>
             <div class="ae86-hazard ae86-hazard-front-left"></div>
             <div class="ae86-hazard ae86-hazard-side-left"></div>
@@ -832,6 +913,7 @@ const jsContent = `// ==UserScript==
             </div>
             <div class="impreza-headlight-lamp"></div>
             <div class="impreza-headlight-glow"></div>
+            <div class="impreza-headlight-beam"></div>
             <div class="impreza-taillight-lamp"></div>
             <div class="impreza-taillight-glow"></div>
         \`;
@@ -884,12 +966,12 @@ const jsContent = `// ==UserScript==
         }
         svgCurve.innerHTML = \`
             <path id="ae86-curve-asphalt"       stroke="#1e2025" stroke-width="18" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-fill"          stroke="#1db954" stroke-width="18" stroke-linecap="butt" fill="none" opacity="0.45"/>
-            <path id="ae86-curve-stripes"       stroke="#ffffff" stroke-width="1.6" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-border-top"    stroke="#ffffff" stroke-width="1.2" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-inner-top"     stroke="#ffffff" stroke-width="1.0" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-inner-bottom"  stroke="#ffffff" stroke-width="1.0" stroke-linecap="butt" fill="none"/>
-            <path id="ae86-curve-border-bottom" stroke="#ffffff" stroke-width="1.2" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-stripes"       stroke="rgba(225, 230, 245, 0.58)" stroke-width="1.6" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-border-top"    stroke="rgba(235, 240, 250, 0.65)" stroke-width="1.2" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-inner-top"     stroke="rgba(225, 230, 245, 0.50)" stroke-width="1.0" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-inner-bottom"  stroke="rgba(225, 230, 245, 0.50)" stroke-width="1.0" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-border-bottom" stroke="rgba(235, 240, 250, 0.65)" stroke-width="1.2" stroke-linecap="butt" fill="none"/>
+            <path id="ae86-curve-fill"          stroke="#07090d" stroke-width="18.5" stroke-linecap="butt" fill="none" opacity="0.84"/>
         \`;
 
         const pathAsphalt = svgCurve.querySelector("#ae86-curve-asphalt");
