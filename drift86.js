@@ -133,7 +133,7 @@
                 right: 1.2px;
             }
 
-            /* Proyección sutil y realista de los faros sobre el asfalto (ambos coches casi igual) */
+            /* Proyección potente y realista de los faros sobre el asfalto (ambos coches casi igual) */
             .ae86-headlight-beam {
                 position: absolute;
                 right: -64px;
@@ -142,9 +142,10 @@
                 height: 16px;
                 background: radial-gradient(
                     ellipse 85% 65% at 0% 55%,
-                    rgba(255, 252, 235, 0.35) 0%,
-                    rgba(255, 248, 220, 0.20) 35%,
-                    rgba(255, 242, 200, 0.07) 65%,
+                    rgba(255, 252, 230, 0.78) 0%,
+                    rgba(255, 246, 210, 0.48) 25%,
+                    rgba(255, 240, 190, 0.22) 55%,
+                    rgba(255, 235, 170, 0.06) 82%,
                     transparent 100%
                 );
                 border-radius: 0 50% 50% 0;
@@ -155,10 +156,10 @@
                 transition: opacity 0.25s ease;
             }
             #${CAR_ID}.paused .ae86-headlight-beam {
-                opacity: 0.10;
+                opacity: 0.15;
             }
             #${CAR_ID}.drifting .ae86-headlight-beam {
-                opacity: 0.40;
+                opacity: 0.55;
             }
 
             /* Subaru Impreza WRX STI Type R (Bunta Fujiwara Easter Egg) */
@@ -212,7 +213,7 @@
                 z-index: 5;
             }
 
-            /* Proyección sutil y realista de los faros sobre el asfalto (ambos coches casi igual) */
+            /* Proyección potente y realista de los faros sobre el asfalto (ambos coches casi igual) */
             #${IMPREZA_ID} .impreza-headlight-beam {
                 position: absolute;
                 right: -64px;
@@ -221,9 +222,10 @@
                 height: 16px;
                 background: radial-gradient(
                     ellipse 85% 65% at 0% 50%,
-                    rgba(250, 252, 255, 0.35) 0%,
-                    rgba(240, 248, 255, 0.20) 35%,
-                    rgba(225, 240, 255, 0.07) 65%,
+                    rgba(250, 252, 255, 0.78) 0%,
+                    rgba(240, 248, 255, 0.48) 25%,
+                    rgba(225, 240, 255, 0.22) 55%,
+                    rgba(215, 235, 255, 0.06) 82%,
                     transparent 100%
                 );
                 border-radius: 0 50% 50% 0;
@@ -1199,10 +1201,10 @@
                     if (taillightGlow) taillightGlow.style.opacity = (lightsFade * 0.95).toFixed(2);
                     if (taillightLamp) taillightLamp.style.opacity = lightsFade.toFixed(2);
 
-                    const headlightGlow = impreza.querySelector(".impreza-headlight-glow");
+                    const headlightBeam = impreza.querySelector(".impreza-headlight-beam");
                     const headlightLamp = impreza.querySelector(".impreza-headlight-lamp");
                     const frontHeadlightOpacity = (buntaX > clampedCarX + 120 ? Math.max(0, bodyOpacity * 1.2) : 1.0) * lightsFade;
-                    if (headlightGlow) headlightGlow.style.opacity = frontHeadlightOpacity.toFixed(2);
+                    if (headlightBeam) headlightBeam.style.opacity = frontHeadlightOpacity.toFixed(2);
                     if (headlightLamp) headlightLamp.style.opacity = frontHeadlightOpacity.toFixed(2);
                 }
 
