@@ -82,6 +82,7 @@
                 user-select: none;
                 opacity: 0;
                 transition: opacity 0.12s ease;
+                z-index: 2;
             }
 
             /* Vista 1: Pausa / Detenido (viendo hacia adelante en ángulo 3/4 con intermitentes ámbar activos) */
@@ -169,6 +170,7 @@
                 visibility: visible !important;
                 user-select: none;
                 animation: ae86-engine-rumble 0.16s infinite ease-in-out alternate;
+                z-index: 2;
             }
 
             /* Faros delanteros xenón/HID (Siempre encendidos durante la animación) */
@@ -238,10 +240,10 @@
             /* Conductor Takumi Fujiwara en el AE86 */
             .ae86-driver-takumi {
                 position: absolute;
-                left: 21.8px;
-                bottom: 8.2px;
-                width: 9.5px;
-                height: 6.2px;
+                left: 20.6px;
+                bottom: 11.2px;
+                width: 10.5px;
+                height: 6.6px;
                 pointer-events: none;
                 z-index: 1;
             }
@@ -284,10 +286,10 @@
             /* Conductor Bunta Fujiwara en el Impreza GC8 */
             .impreza-driver-bunta {
                 position: absolute;
-                left: 23.2px;
-                bottom: 8.5px;
-                width: 10px;
-                height: 6.5px;
+                left: 22.0px;
+                bottom: 12.0px;
+                width: 11.2px;
+                height: 7.0px;
                 pointer-events: none;
                 z-index: 1;
             }
@@ -319,12 +321,12 @@
             /* Estela viva y sutil de humo del cigarrillo de Bunta */
             .bunta-smoke-container {
                 position: absolute;
-                left: 28.7px;
-                bottom: 12.1px;
-                width: 1px;
-                height: 1px;
+                left: 28.0px;
+                bottom: 15.6px;
+                width: 22px;
+                height: 12px;
                 pointer-events: none;
-                z-index: 10;
+                z-index: 3;
             }
             .bunta-smoke-puff {
                 position: absolute;
@@ -646,7 +648,7 @@
         wrapper.className = "driving";
         wrapper.innerHTML = `
             <div class="ae86-driver-takumi">
-                <svg viewBox="0 0 19 12" class="takumi-svg">
+                <svg viewBox="0 0 19 12" class="takumi-svg" preserveAspectRatio="none">
                     <!-- Asiento TRD deportivo -->
                     <polygon points="1.0,2.2 2.6,1.2 3.2,4.5 1.8,12 0.6,12" fill="#181a20" />
                     <polygon points="1.5,0.8 2.8,0.8 3.0,2.4 1.6,2.4" fill="#101216" />
@@ -735,7 +737,7 @@
         wrapper.innerHTML = `
             <div class="impreza-body">
                 <div class="impreza-driver-bunta">
-                    <svg viewBox="0 0 19 12" class="bunta-svg">
+                    <svg viewBox="0 0 19 12" class="bunta-svg" preserveAspectRatio="none">
                         <!-- Asiento oscuro -->
                         <polygon points="1.0,2.2 2.6,1.2 3.2,4.5 1.8,12 0.6,12" fill="#12141a" />
                         <polygon points="1.5,0.8 2.8,0.8 3.0,2.4 1.6,2.4" fill="#0c0e12" />
