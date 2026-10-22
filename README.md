@@ -23,32 +23,51 @@
 
 <br/>
 
-![Drift86 - AE86 Tokyo Highway](assets/tokyo_road_ae86.gif?v=3)
+![Drift86 - AE86 Tokyo Highway](assets/tokyo_road_ae86.gif?v=6)
 
 <br/>
 
-[**English**](#-english) &nbsp;•&nbsp; [**Español**](#-español)
+[**English**](#english) &nbsp;•&nbsp; [**Español**](#español)
 
 </div>
 
 ---
 
 <a name="english"></a>
-## 🇬🇧 English
+## English
 
-### ✨ Features
+### Features
 
-- **3 Dynamic Pixel-Art Views:**
-  1. **Paused (3/4 Frontal Perspective):** Idling on the road with authentic amber hazard flashers.
-  2. **Playing (Lateral Cruising):** Driving smoothly along the road with bright pop-up headlights, subtle engine rumble, and trailing exhaust smoke.
-  3. **Drifting (Initial D Countersteer):** When dragging the seekbar or jumping through tracks, the road dynamically arches into a mountain hairpin curve while the AE86 throws its tail out in a heavy countersteering drift with dense tire smoke clouds and suspension bounces.
+- **3 Dynamic Pixel-Art States:**
+  1. **Paused (3/4 Frontal Perspective):** Idling on the road with authentic amber hazard flashers and gentle rear parking taillight illumination.
+  2. **Playing (Lateral Cruising):** Driving smoothly along the road with bright pop-up halogen headlights, authentic rotating RS Watanabe wheels, illuminated taillights, subtle engine rumble, and trailing exhaust smoke.
+  3. **Drifting (Initial D Countersteer):** Scrubbing or dragging the seekbar dynamically arches the road into a mountain hairpin curve while the AE86 throws its tail out in a heavy countersteering drift with dense tire smoke clouds.
+- **Manga Action Shout:** Comic balloon ("GO!" / ゴー！) pops up on track start.
 - **Tokyo Highway Road (Shutoko C1):** Dark textured asphalt with double white curb borders and diagonal hazard chevron markings, applied exclusively to the seekbar.
 - **Volume Bar Protection:** The volume slider remains completely untouched with its clean original Spotify styling.
-- **100% Standalone & Lightweight:** Everything is packed into a single `drift86.js` file with embedded base64 sprites. Zero external network calls, zero bloat, and 0% CPU consumption when Spotify is minimized.
+- **100% Standalone & Lightweight:** Everything is packed into a single self-contained bundle with embedded base64 sprites. Zero external network calls, zero bloat, and 0% CPU consumption when Spotify is minimized.
 
 ---
 
-### 🚀 Instant One-Line Install (No manual download required)
+### Bunta Fujiwara Easter Egg (Impreza GC8)
+
+Bunta's Subaru Impreza WRX STI Type R (GC8) overtakes on the outside lane every ~3 minutes, trailing cigarette smoke and boxer exhaust. You can also press **B** to summon him immediately.
+
+<p align="center">
+  <img src="assets/bunta_overtake.gif" alt="Bunta Fujiwara GC8 Overtake" width="100%" />
+</p>
+
+---
+
+### Keyboard Shortcuts
+
+| Key | Action |
+| :--- | :--- |
+| **B** | Trigger Bunta Fujiwara's Impreza GC8 overtake |
+
+---
+
+### Quick Install (No manual download required)
 
 #### Windows (PowerShell):
 ```powershell
@@ -62,14 +81,14 @@ curl -fsSL "https://raw.githubusercontent.com/Marce0c0/drift86/main/drift86.js" 
 
 ---
 
-### 📦 Local Installation (From ZIP or cloned repo)
+### Local Installation (From ZIP or cloned repo)
 
-#### 🪟 Windows:
-1. Download this repository as a ZIP using the green button above, and extract it.
+#### Windows:
+1. Download this repository as a ZIP using the button above and extract it.
 2. Double-click **`install.bat`**.
 3. Type **Y** when prompted to restart Spotify immediately.
 
-#### 🐧 Linux & 🍎 macOS:
+#### Linux & macOS:
 1. Open a terminal in the extracted folder.
 2. Run:
    ```bash
@@ -80,12 +99,13 @@ curl -fsSL "https://raw.githubusercontent.com/Marce0c0/drift86/main/drift86.js" 
 
 ---
 
-### 🛍️ Spicetify Marketplace
+### Spicetify Marketplace
+
 With the included `manifest.json`, you can search for **"Drift86"** in Spicetify Marketplace inside Spotify and click **"Install"** with one single click.
 
 ---
 
-### 🗑️ Uninstallation
+### Uninstallation
 
 - **Windows:** Double-click `uninstall.bat`.
 - **Linux & macOS:** Run `./uninstall.sh`.
@@ -96,34 +116,53 @@ With the included `manifest.json`, you can search for **"Drift86"** in Spicetify
 
 ---
 
-### 🛠️ Developer Build
+### Developer Build
 
 To rebuild `drift86.js` after tweaking sprites or code in `build.js`:
 ```bash
 node build.js
 ```
-*(Requires only standard Node.js, zero dependencies).*
+*(Requires only standard Node.js, zero external dependencies).*
 
 <br/>
 
 ---
 
 <a name="español"></a>
-## 🇪🇸 Español
+## Español
 
-### ✨ Características
+### Características
 
-- **3 Vistas Dinámicas en Pixel Art:**
-  1. **Pausa (Ángulo 3/4 frontal):** Detenido en la carretera con faros pop-up e intermitentes ámbar parpadeando.
-  2. **Reproduciendo (Cruising lateral):** Vista lateral en carrera con faros iluminados, sutil vibración de motor y humo de escape suave.
-  3. **Derrape (Initial D Drift):** Al arrastrar el cursor o hacer saltos de tiempo, la carretera se curva dinámicamente y el AE86 entra en derrape cruzado con contravolante, humo denso y mini-rebotes de suspensión.
-- **Calzada de Tokio (Shutoko C1):** Asfalto oscuro con bordillos dobles y franjas diagonales blancas (chevron) solo en la barra de reproducción.
+- **3 Estados Dinámicos en Pixel Art:**
+  1. **Pausa (Ángulo 3/4 frontal):** Detenido en la carretera con faros pop-up, intermitentes ámbar parpadeando y luz de posición trasera suave.
+  2. **Reproducción (Cruising lateral):** Vista lateral en carrera con faros pop-up halógenos, llantas RS Watanabe del modelo girando en tiempo real, luces de freno encendidas, vibración de motor y estela tenue de escape.
+  3. **Derrape (Initial D Drift):** Al arrastrar la barra de progreso, la calzada se curva dinámicamente y el AE86 entra en derrape cruzado con contravolante y nubes densas de humo de neumáticos.
+- **Grito Manga:** Bocadillo de impacto estilo cómic ("GO!" / ゴー！) al iniciar una canción.
+- **Calzada de Tokio (Shutoko C1):** Asfalto oscuro con bordillos dobles y franjas diagonales blancas (chevron) aplicadas únicamente a la seekbar.
 - **Protección del Slider de Volumen:** La barra de volumen permanece con su diseño limpio original de Spotify, sin alteraciones.
-- **100% Autónomo (Standalone):** Todo está empaquetado en un único archivo `drift86.js` con sprites base64 integrados. Sin dependencias externas ni consumo en segundo plano cuando la ventana está minimizada (0% CPU).
+- **100% Autónomo (Standalone):** Archivo único autónomo con sprites base64 integrados. Sin dependencias externas ni consumo en segundo plano cuando la ventana está minimizada (0% CPU).
 
 ---
 
-### 🚀 Instalación Remota en 1 sola línea (Sin descargar archivos)
+### Easter Egg de Bunta Fujiwara (Impreza GC8)
+
+El Subaru Impreza WRX STI Type R (GC8) de Bunta aparece espontáneamente cada ~3 minutos para rebasar al AE86 por el carril superior con humo de cigarrillo y escape boxer. También puedes pulsar la tecla **B** para invocarlo cuando quieras.
+
+<p align="center">
+  <img src="assets/bunta_overtake.gif" alt="Adelantamiento de Bunta Fujiwara GC8" width="100%" />
+</p>
+
+---
+
+### Atajos de Teclado
+
+| Tecla | Acción |
+| :--- | :--- |
+| **B** | Invocar el adelantamiento de Bunta Fujiwara (Impreza GC8) |
+
+---
+
+### Instalación Rápida en 1 sola línea (Sin descargar archivos)
 
 #### Windows (PowerShell):
 ```powershell
@@ -137,14 +176,14 @@ curl -fsSL "https://raw.githubusercontent.com/Marce0c0/drift86/main/drift86.js" 
 
 ---
 
-### 📦 Instalación Local (Desde ZIP o carpeta descargada)
+### Instalación Local (Desde ZIP o carpeta descargada)
 
-#### 🪟 Windows:
-1. Descarga el archivo ZIP desde el botón verde de arriba y descomprímelo.
+#### Windows:
+1. Descarga el archivo ZIP desde el botón de arriba y descomprímelo.
 2. Haz doble clic en **`install.bat`**.
 3. Pulsa **S** cuando te pregunte si deseas reiniciar Spotify de inmediato.
 
-#### 🐧 Linux y 🍎 macOS:
+#### Linux y macOS:
 1. Abre tu terminal en la carpeta descargada.
 2. Ejecuta:
    ```bash
@@ -153,12 +192,15 @@ curl -fsSL "https://raw.githubusercontent.com/Marce0c0/drift86/main/drift86.js" 
    ```
 3. Pulsa **s** para reiniciar Spotify cuando termine el instalador.
 
-### 🛍️ Spicetify Marketplace
+---
+
+### Spicetify Marketplace
+
 Con el archivo `manifest.json` incluido, puedes buscar **"Drift86"** directamente en la tienda Spicetify Marketplace dentro de Spotify e instalarlo con un solo clic.
 
 ---
 
-### 🗑️ Desinstalación
+### Desinstalación
 
 - **Windows:** Doble clic en `uninstall.bat`.
 - **Linux / macOS:** Ejecuta `./uninstall.sh`.
@@ -166,6 +208,17 @@ Con el archivo `manifest.json` incluido, puedes buscar **"Drift86"** directament
   ```bash
   spicetify config extensions drift86.js- && spicetify apply && spicetify restart
   ```
+
+---
+
+### Compilación para Desarrolladores
+
+Para recompilar `drift86.js` tras modificar sprites o código en `build.js`:
+```bash
+node build.js
+```
+
+<br/>
 
 ---
 
