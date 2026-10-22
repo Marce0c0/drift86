@@ -2,3 +2,10 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
+Desktop.ini
+*.tmp
+.vscode/
+.idea/
+readme_preview.html
+scratch/
+*.mp4
