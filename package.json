@@ -1,6 +1,6 @@
 {
   "name": "drift86",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Drift86: Initial D Trueno Seekbar for Spicetify / Spotify",
   "main": "drift86.js",
   "scripts": {

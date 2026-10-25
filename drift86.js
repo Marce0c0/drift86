@@ -2,7 +2,7 @@
 // @name         Drift86: Initial D Trueno Seekbar
 // @description  Toyota AE86 Trueno drifting seekbar for Spicetify
 // @author       Marce0c0
-// @version      1.0.1
+// @version      1.0.2
 // ==/UserScript==
 
 (function AE86InitialDSeekbar() {
