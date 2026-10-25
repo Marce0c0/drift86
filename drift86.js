@@ -528,17 +528,17 @@
             .ae86-smoke-puff {
                 position: absolute;
                 border-radius: 50%;
-                background: radial-gradient(circle, rgba(255, 255, 255, 0.98) 0%, rgba(235, 235, 240, 0.8) 35%, rgba(190, 190, 205, 0.3) 70%, rgba(150, 150, 150, 0) 100%);
+                background: radial-gradient(circle, rgba(245, 245, 250, 0.72) 0%, rgba(225, 230, 240, 0.45) 40%, rgba(185, 190, 205, 0.15) 70%, transparent 100%);
                 pointer-events: none;
                 z-index: 99998 !important;
-                animation: ae86-smoke-fade 0.55s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
-                filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3));
+                animation: ae86-smoke-fade 0.50s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+                filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
                 will-change: transform, opacity;
             }
             @keyframes ae86-smoke-fade {
-                0%   { opacity: 0.98; transform: translate(0, 0) scale(0.6); }
-                30%  { opacity: 0.85; }
-                100% { opacity: 0;    transform: translate(-32px, -15px) scale(2.8); }
+                0%   { opacity: 0.72; transform: translate(0, 0) scale(0.6); }
+                30%  { opacity: 0.55; }
+                100% { opacity: 0;    transform: translate(-22px, -10px) scale(2.0); }
             }
 
             .ae86-cruising-smoke {
@@ -637,18 +637,97 @@
             [data-testid="playback-progressbar"] [class*="is-dragging"] .progress-bar__slider,
             .playback-bar .x-progressBar-fillColor,
             .playback-bar .x-progressBar-background,
-            .playback-bar .x-progressBar-progressBarBg,
-            .playback-bar [data-testid="progress-bar"] > div:not(#${CAR_ID}):not(#${SVG_CURVE_ID}):not(#${IMPREZA_ID}):not(.ae86-cruising-smoke):not(.ae86-smoke-puff),
             [data-testid="playback-progressbar"] .x-progressBar-fillColor,
             [data-testid="playback-progressbar"] .x-progressBar-background,
-            [data-testid="playback-progressbar"] .x-progressBar-progressBarBg,
-            [data-testid="playback-progressbar"] [data-testid="progress-bar"] > div:not(#${CAR_ID}):not(#${SVG_CURVE_ID}):not(#${IMPREZA_ID}):not(.ae86-cruising-smoke):not(.ae86-smoke-puff) {
+            .playback-bar .x-progressBar-progressBarBg > div:not(.x-progressBar-sliderArea),
+            [data-testid="playback-progressbar"] .x-progressBar-progressBarBg > div:not(.x-progressBar-sliderArea),
+            .playback-bar .x-progressBar-sliderArea > div:not(.section-marker-element),
+            [data-testid="playback-progressbar"] .x-progressBar-sliderArea > div:not(.section-marker-element) {
                 opacity: 0 !important;
                 background: transparent !important;
                 background-image: none !important;
                 border: none !important;
                 box-shadow: none !important;
                 pointer-events: none !important;
+                display: none !important;
+            }
+
+            .playback-bar .x-progressBar-progressBarBg,
+            [data-testid="playback-progressbar"] .x-progressBar-progressBarBg {
+                background: transparent !important;
+                background-image: none !important;
+                border: none !important;
+                box-shadow: none !important;
+                overflow: visible !important;
+                height: 100% !important;
+            }
+
+            /* Compatibility with section-marker and external seekbar extensions */
+            .playback-bar .x-progressBar-sliderArea,
+            [data-testid="playback-progressbar"] .x-progressBar-sliderArea {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background: transparent !important;
+                overflow: visible !important;
+                z-index: 99994 !important;
+                pointer-events: none !important;
+            }
+
+            .playback-bar .section-marker-element,
+            [data-testid="playback-progressbar"] .section-marker-element,
+            .section-marker-element {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                z-index: 99994 !important;
+                pointer-events: none !important;
+                overflow: visible !important;
+                opacity: 1 !important;
+                display: block !important;
+            }
+
+            .playback-bar .section-marker-marker,
+            [data-testid="playback-progressbar"] .section-marker-marker,
+            .section-marker-marker {
+                position: absolute !important;
+                z-index: 99995 !important;
+                width: 3px !important;
+                height: 18px !important;
+                top: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                background-color: #ffffff !important;
+                border-radius: 1px !important;
+                box-shadow: 0 0 5px rgba(255, 255, 255, 0.9), 0 0 2px #ffffff !important;
+                opacity: 0.95 !important;
+                display: block !important;
+                pointer-events: none !important;
+            }
+
+            .playback-bar .section-marker-sections,
+            [data-testid="playback-progressbar"] .section-marker-sections,
+            .section-marker-sections {
+                z-index: 99991 !important;
+                height: 18px !important;
+                overflow: hidden !important;
+                border-radius: 3px !important;
+            }
+
+            .playback-bar .section-marker-section,
+            [data-testid="playback-progressbar"] .section-marker-section,
+            .section-marker-section {
+                height: 18px !important;
+                pointer-events: none !important;
+            }
+
+            .playback-bar .section-marker-section:nth-child(2n),
+            [data-testid="playback-progressbar"] .section-marker-section:nth-child(2n),
+            .section-marker-section:nth-child(2n) {
+                background-color: rgba(255, 255, 255, 0.07) !important;
             }
 
             .player-controls__buttons {
@@ -908,6 +987,8 @@
 
         road.style.setProperty("position", "relative", "important");
         road.style.setProperty("overflow", "visible", "important");
+        road.classList.add("playback-progressbar");
+        if (road.parentElement) road.parentElement.classList.add("playback-progressbar");
 
         let svgCurve = document.getElementById(SVG_CURVE_ID);
         if (!svgCurve) {
@@ -1222,21 +1303,21 @@
         let lastSmokeTime = 0;
         function emitSmoke(x, y, scale, parentElem) {
             const now = performance.now();
-            if (now - lastSmokeTime < 18) return;
+            if (now - lastSmokeTime < 26) return;
             lastSmokeTime = now;
 
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 2; i++) {
                 const smoke = document.createElement("div");
                 smoke.className = "ae86-smoke-puff";
-                const size = (12 + Math.random() * 12) * scale;
+                const size = (9 + Math.random() * 9) * scale;
                 smoke.style.width = size + "px";
                 smoke.style.height = size + "px";
-                const jitterX = (Math.random() - 0.5) * 12;
-                const jitterY = (Math.random() - 0.5) * 6;
+                const jitterX = (Math.random() - 0.5) * 8;
+                const jitterY = (Math.random() - 0.5) * 4;
                 smoke.style.left = (x - size / 2 + jitterX) + "px";
                 smoke.style.top = (y - size / 2 + jitterY) + "px";
                 parentElem.appendChild(smoke);
-                setTimeout(() => smoke.remove(), 550);
+                setTimeout(() => smoke.remove(), 500);
             }
         }
 
@@ -1289,6 +1370,10 @@
 
             if (currentRoad.style.position !== "relative") {
                 currentRoad.style.setProperty("position", "relative", "important");
+            }
+            if (!currentRoad.classList.contains("playback-progressbar")) {
+                currentRoad.classList.add("playback-progressbar");
+                if (currentRoad.parentElement) currentRoad.parentElement.classList.add("playback-progressbar");
             }
 
             if (car.parentElement !== currentRoad) {
