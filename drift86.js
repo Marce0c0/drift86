@@ -2,7 +2,7 @@
 // @name         Drift86: Initial D Trueno Seekbar
 // @description  Toyota AE86 Trueno drifting seekbar for Spicetify
 // @author       Marce0c0
-// @version      1.0.2
+// @version      1.0.5
 // ==/UserScript==
 
 (function AE86InitialDSeekbar() {
@@ -41,8 +41,8 @@
             .playback-bar [data-testid="progress-bar"],
             [data-testid="playback-progressbar"] [data-testid="progress-bar"],
             .playback-bar .progress-bar,
-            [data-testid="playback-progressbar"] .progress-bar {
-                position: relative !important;
+            [data-testid="playback-progressbar"] .progress-bar,
+            .ae86-road-host {
                 overflow: visible !important;
             }
 
@@ -607,9 +607,6 @@
 
             .playback-bar,
             [data-testid="playback-progressbar"] {
-                display: flex !important;
-                align-items: center !important;
-                position: relative !important;
                 z-index: 10 !important;
                 overflow: visible !important;
             }
@@ -617,16 +614,12 @@
             .playback-bar .progress-bar,
             [data-testid="playback-progressbar"] .progress-bar,
             .playback-bar [data-testid="progress-bar"],
-            [data-testid="playback-progressbar"] [data-testid="progress-bar"] {
-                height: 18px !important;
+            [data-testid="playback-progressbar"] [data-testid="progress-bar"],
+            .ae86-road-host {
                 background: transparent !important;
                 border: none !important;
                 box-shadow: none !important;
                 overflow: visible !important;
-                display: flex !important;
-                align-items: center !important;
-                align-self: center !important;
-                margin: 0 !important;
             }
 
             .playback-bar .progress-bar__slider,
@@ -642,14 +635,16 @@
             .playback-bar .x-progressBar-progressBarBg > div:not(.x-progressBar-sliderArea),
             [data-testid="playback-progressbar"] .x-progressBar-progressBarBg > div:not(.x-progressBar-sliderArea),
             .playback-bar .x-progressBar-sliderArea > div:not(.section-marker-element),
-            [data-testid="playback-progressbar"] .x-progressBar-sliderArea > div:not(.section-marker-element) {
+            [data-testid="playback-progressbar"] .x-progressBar-sliderArea > div:not(.section-marker-element),
+            .ae86-road-host .progress-bar__slider,
+            .ae86-road-host .x-progressBar-fillColor,
+            .ae86-road-host .x-progressBar-background {
                 opacity: 0 !important;
                 background: transparent !important;
                 background-image: none !important;
                 border: none !important;
                 box-shadow: none !important;
                 pointer-events: none !important;
-                display: none !important;
             }
 
             .playback-bar .x-progressBar-progressBarBg,
@@ -950,11 +945,26 @@
         return wrapper;
     }
 
+    function ensureRoadHost(elem) {
+        if (!elem) return;
+        if (!elem.classList.contains('ae86-road-host')) {
+            elem.classList.add('ae86-road-host');
+        }
+        elem.style.setProperty('overflow', 'visible', 'important');
+        const computedPos = window.getComputedStyle(elem).position;
+        if (computedPos === 'static') {
+            elem.style.position = 'relative';
+        }
+    }
+
     function getPlaybackTarget() {
         return document.querySelector('.playback-bar [data-testid="progress-bar"]') ||
                document.querySelector('[data-testid="playback-progressbar"] [data-testid="progress-bar"]') ||
                document.querySelector('.playback-bar .progress-bar') ||
                document.querySelector('[data-testid="playback-progressbar"] .progress-bar') ||
+               document.querySelector('[data-testid="progress-bar"]') ||
+               document.querySelector('.playback-bar .x-progressBar-progressBarBg') ||
+               document.querySelector('[data-testid="playback-progressbar"] .x-progressBar-progressBarBg') ||
                document.querySelector('.playback-bar') ||
                document.querySelector('[data-testid="playback-progressbar"]');
     }
@@ -985,10 +995,7 @@
             return;
         }
 
-        road.style.setProperty("position", "relative", "important");
-        road.style.setProperty("overflow", "visible", "important");
-        road.classList.add("playback-progressbar");
-        if (road.parentElement) road.parentElement.classList.add("playback-progressbar");
+        ensureRoadHost(road);
 
         let svgCurve = document.getElementById(SVG_CURVE_ID);
         if (!svgCurve) {
@@ -1368,13 +1375,7 @@
                 return;
             }
 
-            if (currentRoad.style.position !== "relative") {
-                currentRoad.style.setProperty("position", "relative", "important");
-            }
-            if (!currentRoad.classList.contains("playback-progressbar")) {
-                currentRoad.classList.add("playback-progressbar");
-                if (currentRoad.parentElement) currentRoad.parentElement.classList.add("playback-progressbar");
-            }
+            ensureRoadHost(currentRoad);
 
             if (car.parentElement !== currentRoad) {
                 currentRoad.appendChild(car);
@@ -1390,7 +1391,7 @@
 
             const rect = currentRoad.getBoundingClientRect();
             const w = Math.max(rect.width, 200);
-            const baseline = rect.height / 2;
+            const baseline = rect.height > 0 ? (rect.height / 2) : 9;
 
             const isPlaying = isPlayerPlaying();
 
@@ -1732,7 +1733,10 @@
             if (!elem) return false;
             if (elem.closest?.('.volume-bar, [data-testid="volume-bar"], .main-nowPlayingBar-right, .main-nowPlayingBar-volumeBar')) return false;
             return !!(
-                elem.closest?.('.playback-bar, [data-testid="playback-progressbar"]')
+                elem.closest?.('.playback-bar, [data-testid="playback-progressbar"], [data-testid="progress-bar"], .progress-bar, .ae86-road-host') ||
+                elem.id === CAR_ID || elem.closest?.('#' + CAR_ID) ||
+                elem.id === SVG_CURVE_ID || elem.closest?.('#' + SVG_CURVE_ID) ||
+                elem.id === IMPREZA_ID || elem.closest?.('#' + IMPREZA_ID)
             );
         }
 
