@@ -33,6 +33,7 @@ const jsContent = `// ==UserScript==
     const CAR_ID = "ae86-initial-d-car";
     const IMPREZA_ID = "ae86-bunta-impreza";
     const SVG_CURVE_ID = "ae86-initial-d-curve";
+    const STAGE_ID = "ae86-initial-d-stage";
 
     const AE86_IDLE = "data:image/png;base64,${idleBase64}";
     const AE86_DRIVE = "data:image/png;base64,${driveBase64}";
@@ -50,7 +51,8 @@ const jsContent = `// ==UserScript==
     }
     style.textContent = \`
             .player-controls, .main-nowPlayingBar-center,
-            .main-nowPlayingBar-container, .Root__now-playing-bar, footer {
+            .playback-bar, [data-testid="playback-progressbar"],
+            .ae86-road-host, #\${STAGE_ID} {
                 overflow: visible !important;
             }
 
@@ -64,13 +66,25 @@ const jsContent = `// ==UserScript==
                 overflow: visible !important;
             }
 
+            #\${STAGE_ID} {
+                position: absolute !important;
+                left: 0 !important;
+                top: 50% !important;
+                transform: translateY(-50%) !important;
+                width: 100% !important;
+                height: 24px !important;
+                pointer-events: none !important;
+                overflow: visible !important;
+                z-index: 99990 !important;
+            }
+
             #\${SVG_CURVE_ID} {
                 position: absolute;
                 top: 0; left: 0;
                 width: 100%; height: 100%;
                 pointer-events: none;
                 overflow: visible !important;
-                z-index: 99990 !important;
+                z-index: 1 !important;
                 filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
             }
 
@@ -1015,11 +1029,22 @@ const jsContent = `// ==UserScript==
 
         ensureRoadHost(road);
 
+        let stage = document.getElementById(STAGE_ID);
+        if (!stage) {
+            stage = document.createElement("div");
+            stage.id = STAGE_ID;
+            road.appendChild(stage);
+        } else if (stage.parentElement !== road) {
+            road.appendChild(stage);
+        }
+
         let svgCurve = document.getElementById(SVG_CURVE_ID);
         if (!svgCurve) {
             svgCurve = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svgCurve.id = SVG_CURVE_ID;
-            road.appendChild(svgCurve);
+            stage.appendChild(svgCurve);
+        } else if (svgCurve.parentElement !== stage) {
+            stage.appendChild(svgCurve);
         }
         svgCurve.innerHTML = \`
             <path id="ae86-curve-asphalt"       stroke="#14161a" stroke-width="18" stroke-linecap="butt" fill="none"/>
@@ -1042,7 +1067,9 @@ const jsContent = `// ==UserScript==
         let car = document.getElementById(CAR_ID);
         if (!car) {
             car = createCarElement();
-            road.appendChild(car);
+            stage.appendChild(car);
+        } else if (car.parentElement !== stage) {
+            stage.appendChild(car);
         } else {
             if (car.querySelector("img.ae86-drive")) {
                 car.querySelector("img.ae86-drive").src = AE86_DRIVE;
@@ -1072,7 +1099,9 @@ const jsContent = `// ==UserScript==
         let impreza = document.getElementById(IMPREZA_ID);
         if (!impreza) {
             impreza = createImprezaElement();
-            road.appendChild(impreza);
+            stage.appendChild(impreza);
+        } else if (impreza.parentElement !== stage) {
+            stage.appendChild(impreza);
         }
 
         const playerButtons = document.querySelector(".player-controls__buttons");
@@ -1373,6 +1402,26 @@ const jsContent = `// ==UserScript==
         }
 
 
+        let currentRoadWidth = 0;
+        let roadResizeObserver = null;
+        function observeRoadElement(roadElem) {
+            if (!roadElem || typeof ResizeObserver !== "function") return;
+            if (roadResizeObserver && roadResizeObserver.__observedElem === roadElem) return;
+            if (roadResizeObserver) roadResizeObserver.disconnect();
+            roadResizeObserver = new ResizeObserver((entries) => {
+                for (const entry of entries) {
+                    const widthVal = entry.contentRect?.width;
+                    if (typeof widthVal === "number" && widthVal > 0) {
+                        currentRoadWidth = widthVal;
+                    }
+                }
+            });
+            roadResizeObserver.observe(roadElem);
+            roadResizeObserver.__observedElem = roadElem;
+            const r = roadElem.getBoundingClientRect();
+            if (r.width > 0) currentRoadWidth = r.width;
+        }
+
         let cachedRoad = null;
         let lastTargetCheck = 0;
         function getPlaybackTargetCached() {
@@ -1395,21 +1444,31 @@ const jsContent = `// ==UserScript==
 
             ensureRoadHost(currentRoad);
 
-            if (car.parentElement !== currentRoad) {
-                currentRoad.appendChild(car);
+            let stage = document.getElementById(STAGE_ID);
+            if (!stage) {
+                stage = document.createElement("div");
+                stage.id = STAGE_ID;
+                currentRoad.appendChild(stage);
+            } else if (stage.parentElement !== currentRoad) {
+                currentRoad.appendChild(stage);
             }
-            if (impreza && impreza.parentElement !== currentRoad) {
-                currentRoad.appendChild(impreza);
+
+            if (svgCurve.parentElement !== stage) {
+                stage.appendChild(svgCurve);
             }
-            if (svgCurve.parentElement !== currentRoad) {
-                currentRoad.appendChild(svgCurve);
+            if (car.parentElement !== stage) {
+                stage.appendChild(car);
             }
+            if (impreza && impreza.parentElement !== stage) {
+                stage.appendChild(impreza);
+            }
+
             const oldBtn = document.getElementById("ae86-bunta-btn");
             if (oldBtn) oldBtn.remove();
 
-            const rect = currentRoad.getBoundingClientRect();
-            const w = Math.max(rect.width, 200);
-            const baseline = rect.height > 0 ? (rect.height / 2) : 9;
+            observeRoadElement(currentRoad);
+            const w = Math.max(currentRoadWidth || currentRoad.getBoundingClientRect().width, 200);
+            const baseline = 12;
 
             const isPlaying = isPlayerPlaying();
 
@@ -1633,7 +1692,7 @@ const jsContent = `// ==UserScript==
                 }
 
                 if (buntaActive) {
-                    emitCruisingSmoke(buntaX - 25, (isDragging || buntaCancelling ? baseline : carY) + buntaYOffset + 4.5, currentRoad, true);
+                    emitCruisingSmoke(buntaX - 25, (isDragging || buntaCancelling ? baseline : carY) + buntaYOffset + 4.5, stage || currentRoad, true);
                 }
 
                 if (buntaX > w + 90) {
@@ -1662,7 +1721,7 @@ const jsContent = `// ==UserScript==
 
             if (playerButtons) {
                 const lift = archHeight * 0.5;
-                playerButtons.style.transform = lift > 0.4 ? "translateY(-" + lift + "px)" : "none";
+                playerButtons.style.transform = lift > 0.4 ? "translateY(-" + lift + "px)" : "";
             }
 
             const isCurveActive = archHeight > 0.05;
@@ -1738,9 +1797,9 @@ const jsContent = `// ==UserScript==
                 const smokeScale = isSurpriseDrifting
                     ? (1.3 * surpriseDecay)
                     : ((1.0 + Math.min(Math.abs(velocity), 3) * 0.25) * Math.max(0.6, driftDecay));
-                emitSmoke(carLeft + 6, carY + 4, smokeScale, currentRoad);
+                emitSmoke(carLeft + 6, carY + 4, smokeScale, stage || currentRoad);
             } else if (isPlaying) {
-                emitCruisingSmoke(carLeft + 2.5, carY + 4.0, currentRoad, false);
+                emitCruisingSmoke(carLeft + 2.5, carY + 4.0, stage || currentRoad, false);
             }
 
             requestAnimationFrame(loop);
@@ -1750,11 +1809,13 @@ const jsContent = `// ==UserScript==
         function isProgressBarElement(elem) {
             if (!elem) return false;
             if (elem.closest?.('.volume-bar, [data-testid="volume-bar"], .main-nowPlayingBar-right, .main-nowPlayingBar-volumeBar')) return false;
+            if (elem.closest?.('[data-testid="playback-position"], [data-testid="playback-duration"], .playback-bar__progress-time-elapsed, .playback-bar__progress-time-remaining, button')) return false;
             return !!(
-                elem.closest?.('.playback-bar, [data-testid="playback-progressbar"], [data-testid="progress-bar"], .progress-bar, .ae86-road-host') ||
+                elem.closest?.('.playback-bar, [data-testid="playback-progressbar"], [data-testid="progress-bar"], .progress-bar, .ae86-road-host, #' + STAGE_ID) ||
                 elem.id === CAR_ID || elem.closest?.('#' + CAR_ID) ||
                 elem.id === SVG_CURVE_ID || elem.closest?.('#' + SVG_CURVE_ID) ||
-                elem.id === IMPREZA_ID || elem.closest?.('#' + IMPREZA_ID)
+                elem.id === IMPREZA_ID || elem.closest?.('#' + IMPREZA_ID) ||
+                elem.id === STAGE_ID
             );
         }
 
