@@ -1485,7 +1485,12 @@ const jsContent = `// ==UserScript==
                 progress = dragProgress;
             } else {
                 const audioProg = getAudioProgress(currentRoad);
-                if (audioProg !== null) {
+                const isAwaitingSeekAck = (now - lastUserSeekTime < 500) && lastKnownProgress !== null;
+
+                if (isAwaitingSeekAck && audioProg !== null && Math.abs(audioProg - lastKnownProgress) > 0.02) {
+                    // Spotify audio engine hasn't acknowledged seek yet; hold at target
+                    progress = lastKnownProgress;
+                } else if (audioProg !== null) {
                     progress = audioProg;
                 } else if (lastKnownProgress !== null) {
                     progress = lastKnownProgress;
